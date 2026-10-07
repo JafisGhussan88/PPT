@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MAKALAH ETIKA BERAGAMA · Mengenal Asal-Usul Manusia</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,600;14..32,700;14..32,800&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #7c3aed;
+      --primary-light: #a78bfa;
+      --accent: #f59e0b;
+      --accent-soft: #fbbf24;
+      --bg: #ffffff;
+      --text-dark: #1e1b2e;
+      --text-medium: #4b4763;
+      --text-light: #6b6880;
+      --card-bg: #faf9ff;
+      --border-soft: #ede9fe;
+      --shadow-sm: 0 4px 12px rgba(124, 58, 237, 0.06);
+      --shadow-md: 0 12px 28px rgba(124, 58, 237, 0.08);
+      --shadow-lg: 0 24px 48px rgba(124, 58, 237, 0.12);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      background-image:
+        radial-gradient(circle at 15% 10%, rgba(124, 58, 237, 0.06) 0%, transparent 45%),
+        radial-gradient(circle at 85% 60%, rgba(245, 158, 11, 0.05) 0%, transparent 45%),
+        radial-gradient(circle at 50% 100%, rgba(124, 58, 237, 0.04) 0%, transparent 50%);
+      background-attachment: fixed;
+      color: var(--text-dark);
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Progress bar di atas */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 4px;
+      width: 0%;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      z-index: 9999;
+      transition: width 0.1s linear;
+      box-shadow: 0 0 12px rgba(124, 58, 237, 0.5);
+    }
+
+    .presentation {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 6rem;
+    }
+
+    /* Slide styling */
+    .slide {
+      background: #ffffff;
+      border: 1px solid var(--border-soft);
+      border-radius: 2rem;
+      padding: 2.8rem 3rem;
+      margin-bottom: 4rem;
+      box-shadow: var(--shadow-md);
+      position: relative;
+      overflow: hidden;
+      opacity: 0;
+      transform: translateY(60px) scale(0.97);
+      transition: opacity 0.9s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1),
+                  box-shadow 0.4s ease,
+                  border-color 0.4s ease;
+    }
+
+    /* Dekorasi sudut slide */
+    .slide::before {
+      content: '';
+      position: absolute;
+      top: -60px;
+      right: -60px;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(124, 58, 237, 0.08), transparent 70%);
+      pointer-events: none;
+      transition: transform 0.6s ease;
+    }
+
+    .slide::after {
+      content: '';
+      position: absolute;
+      bottom: -50px;
+      left: -50px;
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(245, 158, 11, 0.07), transparent 70%);
+      pointer-events: none;
+    }
+
+    .slide:hover::before {
+      transform: scale(1.3) translate(-10px, 10px);
+    }
+
+    .slide:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: var(--primary-light);
+    }
+
+    /* Animasi muncul saat digulir */
+    .slide.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Efek entrance bervariasi */
+    .slide:nth-child(odd).visible {
+      transform: translateY(0) scale(1);
+    }
+
+    .slide:nth-child(even).visible {
+      transform: translateY(0) scale(1);
+    }
+
+    /* Konten di dalam slide animasi bertahap */
+    .slide > * {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+
+    .slide.visible > * {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide.visible > *:nth-child(1) { transition-delay: 0.15s; }
+    .slide.visible > *:nth-child(2) { transition-delay: 0.25s; }
+    .slide.visible > *:nth-child(3) { transition-delay: 0.35s; }
+    .slide.visible > *:nth-child(4) { transition-delay: 0.45s; }
+    .slide.visible > *:nth-child(5) { transition-delay: 0.55s; }
+    .slide.visible > *:nth-child(6) { transition-delay: 0.65s; }
+
+    /* Logo / identitas */
+    .logo-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.8rem;
+    }
+
+    .logo-placeholder {
+      width: 100px;
+      height: 100px;
+      background: linear-gradient(145deg, #7c3aed, #a78bfa);
+      border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 15px 35px rgba(124, 58, 237, 0.3), 0 0 0 4px #ffffff, 0 0 0 6px rgba(245, 158, 11, 0.15);
+      animation: morph 8s infinite alternate ease-in-out, float 4s ease-in-out infinite;
+      position: relative;
+    }
+
+    .logo-placeholder i {
+      font-size: 3.4rem;
+      color: #ffffff;
+      filter: drop-shadow(0 3px 6px rgba(0,0,0,0.2));
+    }
+
+    @keyframes morph {
+      0% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+      50% { border-radius: 60% 40% 40% 60% / 50% 60% 40% 50%; }
+      100% { border-radius: 40% 60% 30% 70% / 60% 30% 70% 40%; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 3rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      color: var(--text-dark);
+      margin-bottom: 0.8rem;
+      line-height: 1.15;
+      text-align: center;
+      position: relative;
+    }
+
+    h1 .gradient {
+      background: linear-gradient(135deg, #7c3aed 0%, #a78bfa 50%, #f59e0b 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subhead {
+      font-size: 1.3rem;
+      color: var(--text-medium);
+      font-weight: 500;
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.8rem;
+      border-bottom: 2px dashed var(--border-soft);
+      letter-spacing: 0.3px;
+    }
+
+    .subhead i {
+      color: var(--accent);
+      margin-right: 0.5rem;
+    }
+
+    /* Author cards */
+    .author-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.2rem;
+      margin: 2rem 0 1.8rem;
+    }
+
+    .author-card {
+      background: linear-gradient(135deg, #faf9ff, #f5f2ff);
+      border: 1px solid var(--border-soft);
+      border-radius: 1.3rem;
+      padding: 1.2rem 1.4rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: var(--shadow-sm);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .author-card::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      height: 100%;
+      width: 4px;
+      background: linear-gradient(to bottom, var(--primary), var(--accent));
+      transform: scaleY(0);
+      transform-origin: top;
+      transition: transform 0.4s ease;
+    }
+
+    .author-card:hover::before {
+      transform: scaleY(1);
+    }
+
+    .author-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary-light);
+    }
+
+    .author-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      color: #fff;
+      font-size: 1.3rem;
+      box-shadow: 0 6px 15px rgba(124, 58, 237, 0.25);
+    }
+
+    .author-info {
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+    }
+
+    .author-info strong {
+      color: var(--text-dark);
+      font-weight: 700;
+      font-size: 1rem;
+      margin-bottom: 0.15rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .author-info span {
+      color: var(--accent);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .dosen-card {
+      background: linear-gradient(135deg, #fffbeb, #fef3c7);
+      border: 1px solid #fde68a;
+      border-radius: 1.3rem;
+      padding: 1.2rem 1.6rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-top: 1rem;
+      box-shadow: 0 6px 18px rgba(245, 158, 11, 0.12);
+      transition: all 0.3s ease;
+    }
+
+    .dosen-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 25px rgba(245, 158, 11, 0.2);
+    }
+
+    .dosen-card i {
+      font-size: 1.8rem;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .dosen-card div {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .dosen-card .label {
+      font-size: 0.8rem;
+      color: #92400e;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+
+    .dosen-card .name {
+      font-size: 1.05rem;
+      color: var(--text-dark);
+      font-weight: 700;
+    }
+
+    .institusi {
+      margin-top: 1.8rem;
+      padding-top: 1.5rem;
+      border-top: 2px dashed var(--border-soft);
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem 2rem;
+      font-size: 0.92rem;
+      color: var(--text-light);
+      font-weight: 500;
+    }
+
+    .institusi span {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .institusi i {
+      color: var(--primary);
+    }
+
+    /* Paragraf & teks */
+    .slide p {
+      color: var(--text-medium);
+      margin-bottom: 1.1rem;
+      font-size: 1.05rem;
+      text-align: justify;
+    }
+
+    .arabic {
+      font-weight: 500;
+      color: var(--primary);
+    }
+
+    .highlight {
+      color: var(--primary);
+      font-weight: 700;
+      background: linear-gradient(to bottom, transparent 60%, rgba(245, 158, 11, 0.2) 60%);
+      padding: 0 3px;
+    }
+
+    /* Judul bab */
+    .bab-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 3px solid transparent;
+      border-image: linear-gradient(to right, var(--primary), var(--accent)) 1;
+      border-image-slice: 1;
+      border-bottom-width: 3px;
+      border-bottom-style: solid;
+      position: relative;
+    }
+
+    .bab-title i {
+      font-size: 1.9rem;
+      color: var(--primary);
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subbab {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin: 2rem 0 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding-left: 0.3rem;
+    }
+
+    .subbab i {
+      color: var(--accent);
+      font-size: 1.3rem;
+    }
+
+    .subbab-mini {
+      color: var(--primary);
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 1.5rem 0 0.7rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .subbab-mini i {
+      color: var(--accent);
+      font-size: 0.7rem;
+    }
+
+    /* Card grid untuk poin */
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.3rem;
+      margin: 1.8rem 0;
+    }
+
+    .info-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-soft);
+      border-radius: 1.3rem;
+      padding: 1.6rem 1.4rem;
+      transition: all 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .info-card::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(to right, var(--primary), var(--accent));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s ease;
+    }
+
+    .info-card:hover::after {
+      transform: scaleX(1);
+    }
+
+    .info-card:hover {
+      transform: translateY(-6px);
+      box-shadow: var(--shadow-md);
+      background: #ffffff;
+    }
+
+    .info-card i {
+      font-size: 1.9rem;
+      color: var(--primary);
+      margin-bottom: 0.8rem;
+      display: block;
+      transition: transform 0.3s ease;
+    }
+
+    .info-card:hover i {
+      transform: scale(1.15) rotate(-5deg);
+    }
+
+    .info-card h3 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-dark);
+    }
+
+    .info-card p {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      margin: 0;
+      text-align: left;
+      line-height: 1.6;
+    }
+
+    /* Kesimpulan box */
+    .kesimpulan-box {
+      background: linear-gradient(135deg, #faf9ff 0%, #f0e9ff 100%);
+      border: 1px solid var(--border-soft);
+      border-left: 5px solid var(--primary);
+      border-radius: 1.3rem;
+      padding: 2rem 2.2rem;
+      margin-top: 1rem;
+      box-shadow: var(--shadow-sm);
+      position: relative;
+    }
+
+    .kesimpulan-box::before {
+      content: '\201C';
+      font-family: 'Playfair Display', serif;
+      position: absolute;
+      top: -10px;
+      right: 25px;
+      font-size: 6rem;
+      color: rgba(124, 58, 237, 0.1);
+      line-height: 1;
+    }
+
+    .kesimpulan-box p {
+      color: var(--text-medium);
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+      position: relative;
+      z-index: 1;
+    }
+
+    .kesimpulan-box p:last-child {
+      margin-bottom: 0;
+    }
+
+    /* Daftar pustaka */
+    .pustaka-list {
+      list-style: none;
+      margin: 1.5rem 0;
+    }
+
+    .pustaka-list li {
+      padding: 1rem 0.8rem 1rem 2.8rem;
+      border-bottom: 1px solid var(--border-soft);
+      font-size: 1rem;
+      color: var(--text-medium);
+      position: relative;
+      transition: all 0.3s ease;
+      border-radius: 0.5rem;
+    }
+
+    .pustaka-list li:last-child {
+      border-bottom: none;
+    }
+
+    .pustaka-list li:hover {
+      background: linear-gradient(to right, rgba(124, 58, 237, 0.04), transparent);
+      padding-left: 3.2rem;
+      color: var(--text-dark);
+    }
+
+    .pustaka-list li::before {
+      content: "\f02d";
+      font-family: "Font Awesome 6 Free";
+      font-weight: 900;
+      position: absolute;
+      left: 0.8rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+      font-size: 1rem;
+      transition: transform 0.3s ease;
+    }
+
+    .pustaka-list li:hover::before {
+      transform: translateY(-50%) scale(1.2);
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+      opacity: 0;
+      transition: opacity 0.5s;
+    }
+
+    .scroll-hint.visible {
+      opacity: 1;
+    }
+
+    .scroll-hint i {
+      font-size: 1.8rem;
+      color: var(--primary);
+      animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(12px); }
+    }
+
+    /* Counter / nomor slide */
+    .slide-number {
+      position: absolute;
+      top: 1.5rem;
+      right: 2rem;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--primary-light);
+      letter-spacing: 2px;
+      opacity: 0.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+      .slide {
+        padding: 2rem 1.4rem;
+        border-radius: 1.5rem;
+        margin-bottom: 2.5rem;
+      }
+      h1 { font-size: 2rem; }
+      .bab-title { font-size: 1.6rem; }
+      .subbab { font-size: 1.15rem; }
+      .presentation { padding: 1.5rem 0.9rem 4rem; }
+      .author-grid { grid-template-columns: 1fr; }
+      .institusi { flex-direction: column; align-items: center; gap: 0.6rem; }
+      .slide-number { top: 1rem; right: 1.2rem; }
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f5f2ff;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(to bottom, var(--primary), var(--accent));
+      border-radius: 10px;
+      border: 2px solid #f5f2ff;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: linear-gradient(to bottom, var(--accent), var(--primary));
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Progress bar -->
+  <div class="progress-bar" id="progressBar"></div>
+
+  <div class="presentation">
+
+    <!-- SLIDE 1: JUDUL -->
+    <section class="slide" data-slide="1">
+      <span class="slide-number">01 / 06</span>
+      <div class="logo-wrapper">
+        <div class="logo-placeholder">
+          <i class="fas fa-atom"></i>
+        </div>
+      </div>
+      <h1>MAKALAH <span class="gradient">ETIKA BERAGAMA</span></h1>
+      <div class="subhead">
+        <i class="fas fa-book-open"></i> "Mengenal Asal-Usul Manusia"
+      </div>
+
+      <div class="author-grid">
+        <div class="author-card">
+          <div class="author-avatar"><i class="fas fa-user-graduate"></i></div>
+          <div class="author-info">
+            <strong>Andhika Satya Reza Noor Fadli</strong>
+            <span>26.83.1243</span>
+          </div>
+        </div>
+        <div class="author-card">
+          <div class="author-avatar"><i class="fas fa-user-graduate"></i></div>
+          <div class="author-info">
+            <strong>Shaquille Murray Bariq Al Na'ir</strong>
+            <span>26.83.1249</span>
+          </div>
+        </div>
+        <div class="author-card">
+          <div class="author-avatar"><i class="fas fa-user-graduate"></i></div>
+          <div class="author-info">
+            <strong>Ghussan Jafis</strong>
+            <span>26.83.1263</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="dosen-card">
+        <i class="fas fa-chalkboard-teacher"></i>
+        <div>
+          <span class="label">Dosen Pengampu</span>
+          <span class="name">Mulyadi Erman, S.Ag., M.A.</span>
+        </div>
+      </div>
+
+      <div class="institusi">
+        <span><i class="fas fa-university"></i> SI-Teknik Komputer</span>
+        <span><i class="fas fa-laptop-code"></i> Fakultas Ilmu Komputer</span>
+        <span><i class="fas fa-map-pin"></i> Universitas Amikom Yogyakarta 2026</span>
+      </div>
+    </section>
+
+    <!-- SLIDE 2: KATA PENGANTAR -->
+    <section class="slide" data-slide="2">
+      <span class="slide-number">02 / 06</span>
+      <div class="bab-title">
+        <i class="fas fa-star-and-crescent"></i> Kata Pengantar
+      </div>
+      <p><span class="arabic">Assalamu’alaikum warahmatullahi wabarakatuh.</span></p>
+      <p><span class="highlight">Alhamdulillahirobil’alaamiin,</span> Segala puji bagi Allah SWT, Tuhan semesta alam, yang telah melimpahkan rahmat, taufik, dan hidayah-Nya sehingga penulis dapat menyelesaikan makalah ini dengan baik. Shalawat serta salam semoga senantiasa tercurah kepada Nabi Muhammad SAW, teladan akhlak yang agung, beserta keluarga, sahabat, dan seluruh pengikutnya hingga akhir zaman.</p>
+      <p>Manusia adalah makhluk yang telah diciptakan oleh Allah SWT. Sangat penting bagi manusia untuk memahami asal usul penciptaannya karena dengan demikian mereka akan bisa mengetahui tentang dirinya sendiri dan tujuan hidup mereka. Menurut Islam pengetahuan tentang manusia berasal dari Al-Quran yang memberikan rincian mengenai penciptaan, esensi dan peran manusia.</p>
+      <p>Makalah ini ditujukan untuk membahas topik <span class="highlight">"Mengetahui Asal Usul Manusia"</span> yang melibatkan tiga bidang pembahasan yaitu apa itu manusia dan siapa itu manusia, alasan di balik penciptaan manusia dan cara hidup sebagai ciptaan Allah SWT.</p>
+      <p>Penulis menyampaikan terima kasih kepada dosen pengampu mata kuliah atas bimbingan dan arahannya, serta kepada semua pihak yang telah membantu dalam proses penyusunan makalah ini. Penulis menyadari bahwa makalah ini masih jauh dari sempurna. Oleh karena itu, kritik dan saran yang membangun sangat penulis harapkan demi perbaikan di masa mendatang.</p>
+      <p>Akhir kata, penulis berharap makalah ini dapat bermanfaat bagi pembaca dan menambah pemahaman mengenai asal-usul, hakikat, dan tujuan penciptaan manusia, serta bagaimana manusia menjalani kehidupan sebagai makhluk ciptaan Allah SWT. Aamiin.</p>
+      <p><span class="arabic">Wassalamu'alaikum warahmatullahi wabarakatuh.</span></p>
+    </section>
+
+    <!-- SLIDE 3: BAB I PENDAHULUAN -->
+    <section class="slide" data-slide="3">
+      <span class="slide-number">03 / 06</span>
+      <div class="bab-title">
+        <i class="fas fa-book-open"></i> BAB I · Pendahuluan
+      </div>
+
+      <div class="subbab">
+        <i class="fas fa-question-circle"></i> 1.1 Apa dan Siapa Manusia
+      </div>
+
+      <div class="card-grid">
+        <div class="info-card">
+          <i class="fas fa-brain"></i>
+          <h3>Apa itu Manusia?</h3>
+          <p>Makhluk hidup yang memiliki akal, perasaan, kesadaran, dan kemampuan berinteraksi dengan sesama serta lingkungannya.</p>
+        </div>
+        <div class="info-card">
+          <i class="fas fa-users"></i>
+          <h3>Makhluk Sosial</h3>
+          <p>Membutuhkan orang lain, memiliki tanggung jawab menghormati hak orang lain, menjaga lingkungan, dan membangun hubungan yang baik.</p>
+        </div>
+        <div class="info-card">
+          <i class="fas fa-hand-holding-heart"></i>
+          <h3>Martabat Manusia</h3>
+          <p>Setiap manusia memiliki martabat yang perlu dihormati tanpa membedakan suku, ras, agama, budaya, maupun latar belakang.</p>
+        </div>
+      </div>
+
+      <div class="subbab-mini">
+        <i class="fas fa-circle"></i> B. Siapa Manusia?
+      </div>
+      <p>Menurut pandangan agama secara universal, manusia adalah makhluk ciptaan Tuhan atau bagian dari tatanan kehidupan yang memiliki nilai dan tujuan hidup. Manusia diberikan kemampuan untuk berpikir, merasakan, memilih, serta membedakan antara perbuatan baik dan buruk.</p>
+      <p>Dalam berbagai agama, manusia dipandang sebagai makhluk yang harus menjalani kehidupan dengan kebaikan, kasih sayang, keadilan, dan moralitas. Islam memandang manusia sebagai hamba dan khalifah Allah di bumi, Kristen mengajarkan manusia untuk mengasihi Tuhan dan sesama, sementara Hindu, Buddha, dan Konghucu juga memiliki ajaran mengenai pengembangan moral, kebajikan, dan kehidupan yang harmonis.</p>
+      <p>Meskipun setiap agama memiliki pemahaman yang berbeda mengenai asal-usul dan tujuan manusia, terdapat kesamaan bahwa manusia memiliki nilai, tanggung jawab, dan tujuan dalam menjalani kehidupannya.</p>
+    </section>
+
+    <!-- SLIDE 4: PEMBAHASAN 1.2 -->
+    <section class="slide" data-slide="4">
+      <span class="slide-number">04 / 06</span>
+      <div class="bab-title">
+        <i class="fas fa-lightbulb"></i> Pembahasan
+      </div>
+
+      <div class="subbab">
+        <i class="fas fa-bullseye"></i> 1.2 Tujuan Penciptaan Manusia
+      </div>
+      <p>Secara umum, tujuan manusia diciptakan atau hidup di dunia dilihat dari tiga sudut: filsafat, sosial, dan biologi. Manusia bertugas menjaga keturunan, membangun peradaban, dan mencari kebahagiaan. Manusia memiliki akal budi dan kemampuan beradaptasi agar dapat mengelola bumi, menciptakan inovasi, serta membangun hubungan sosial yang harmonis.</p>
+      <p>Sementara itu, dalam pandangan Islam, tujuan utama penciptaan manusia dipandu secara spiritual yang tertuang langsung dalam kitab suci Al-Qur'an. Manusia diciptakan murni untuk beribadah kepada Allah SWT (Surah Az-Zariyat ayat 56) sekaligus mengemban amanah sebagai khalifah (pemimpin/pengelola) di bumi. Ibadah dalam Islam tidak sebatas ritual shalat atau puasa semata, melainkan mencakup seluruh aktivitas kehidupan yang diinatkan karena Allah, termasuk menjaga kelestarian alam, menegakkan keadilan, dan menyebarkan kebaikan bagi seluruh alam semesta (rahmatan lil 'alamin).</p>
+
+      <div class="subbab">
+        <i class="fas fa-globe"></i> 1.3 Paradigma Hidup Sebagai Manusia Ciptaan Tuhan
+      </div>
+      <p>Sebagai manusia yang diciptakan oleh Tuhan, kita dianggap sebagai makhluk yang memiliki martabat tinggi, akal, dan nurani. Dalam pandangan ini, makna hidup adalah untuk menjaga keseimbangan alam semesta dan menjalin hubungan yang baik dengan sesama makhluk hidup.</p>
+      <p>Dengan kesadaran spiritual yang universal, manusia dianggap sebagai pelaku kedamaian yang memiliki tanggung jawab moral di bumi. Setiap orang mempunyai tugas untuk menegakkan keadilan, menyebarkan kasih sayang, dan menjaga lingkungan agar bisa diwariskan kepada generasi berikutnya.</p>
+    </section>
+
+    <!-- SLIDE 5: PARADIGMA AGAMA -->
+    <section class="slide" data-slide="5">
+      <span class="slide-number">05 / 06</span>
+      <div class="bab-title">
+        <i class="fas fa-place-of-worship"></i> Paradigma Agama
+      </div>
+      <p style="margin-bottom: 1.5rem;">Dari sudut pandang Islam dan agama lain, manusia dianggap sebagai makhluk yang tunduk sepenuhnya pada Tuhan:</p>
+
+      <div class="card-grid">
+        <div class="info-card">
+          <i class="fas fa-mosque"></i>
+          <h3>Islam</h3>
+          <p>Manusia diciptakan untuk beribadah kepada Allah dan menjalankan tugas sebagai khalifah di bumi, memakmurkan dunia sesuai syariat-Nya.</p>
+        </div>
+        <div class="info-card">
+          <i class="fas fa-cross"></i>
+          <h3>Kristen & Katolik</h3>
+          <p>Manusia dianggap sebagai gambar dan rupa Tuhan yang diutus untuk merawat ciptaan dengan baik dan penuh kasih.</p>
+        </div>
+        <div class="info-card">
+          <i class="fas fa-om"></i>
+          <h3>Hindu</h3>
+          <p>Manusia adalah bagian dari ketuhanan yang harus menjalankan dharma untuk mencapai keseimbangan.</p>
+        </div>
+        <div class="info-card">
+          <i class="fas fa-dharmachakra"></i>
+          <h3>Buddhisme</h3>
+          <p>Manusia bertanggung jawab atas perbuatannya dan berusaha membebaskan diri dari penderitaan melalui hukum karma.</p>
+        </div>
+      </div>
+      <p style="margin-top: 1.5rem; font-style: italic; color: var(--primary); font-weight: 500;">Keseluruhan agama ini sepakat bahwa manusia bukan pemilik sejati dirinya, tapi utusan Tuhan yang akan diminta pertanggungjawaban atas segala perbuatannya.</p>
+    </section>
+
+    <!-- SLIDE 6: KESIMPULAN -->
+    <section class="slide" data-slide="6">
+      <span class="slide-number">06 / 06</span>
+      <div class="bab-title">
+        <i class="fas fa-check-circle"></i> BAB III · Kesimpulan
+      </div>
+      <div class="kesimpulan-box">
+        <p><strong>Manusia adalah makhluk yang diciptakan oleh Tuhan.</strong> Mereka memiliki akal, perasaan, kesadaran, serta kemampuan untuk berpikir dan berinteraksi dengan orang lain. Manusia tidak hanya hidup untuk memenuhi kebutuhan diri sendiri, tetapi juga punya tanggung jawab untuk berbuat baik, menghormati sesama, menjaga lingkungan, dan menciptakan kehidupan yang baik dan seimbang.</p>
+        <p>Dari sudut pandang agama, manusia memiliki nilai dan tujuan dalam hidup. Meski setiap agama punya pandangan yang berbeda tentang asal-usul dan tujuan manusia, mereka semua sepakat bahwa manusia harus hidup dengan kebaikan, kasih sayang, keadilan, dan sikap moral yang baik. Dalam Islam, manusia dianggap sebagai hamba Allah SWT, tetapi juga sebagai khalifah di bumi yang tugasnya adalah beribadah dan menjaga kehidupan dengan baik.</p>
+        <p>Akhirnya, menjadi manusia tidak hanya tentang bertahan hidup, tetapi juga tentang bagaimana kita memberi makna pada kehidupan. Dengan menggunakan akal dan hati untuk berbuat baik, menjaga sesama, serta menjalankan tanggung jawab kepada Tuhan dan lingkungan, manusia bisa menjadi pribadi yang bermanfaat dan meninggalkan kebaikan untuk generasi yang akan datang.</p>
+      </div>
+    </section>
+
+    <!-- SLIDE 7: DAFTAR PUSTAKA -->
+    <section class="slide" data-slide="7">
+      <div class="bab-title">
+        <i class="fas fa-bookmark"></i> Daftar Pustaka
+      </div>
+      <ul class="pustaka-list">
+        <li>Al-Qur’an al-Karim.</li>
+        <li>Al-Qur’an dan Terjemahannya. (2019). Jakarta: Kementerian Agama Republik Indonesia.</li>
+        <li>Al-Ghazali, Imam. (2018). Ihya’ ‘Ulumiddin. Jakarta: Republika.</li>
+        <li>Kaelany, H. D. (2005). Islam dan Aspek-Aspek Kemasyarakatan. Jakarta: Bumi Aksara.</li>
+        <li>Nata, Abuddin. (2016). Akhlak Tasawuf dan Karakter Mulia. Jakarta: Rajawali Pers.</li>
+        <li>Shihab, M. Quraish. (2013). Wawasan Al-Qur’an: Tafsir Tematik atas Pelbagai Persoalan Umat. Bandung: Mizan.</li>
+        <li>Shihab, M. Quraish. (2018). Membumikan Al-Qur’an: Fungsi dan Peran Wahyu dalam Kehidupan Masyarakat. Bandung: Mizan.</li>
+        <li>Syalut, Mahmud. (2001). Islam: Aqidah dan Syariah. Jakarta: Pustaka Amani.</li>
+        <li>Kementerian Agama Republik Indonesia. (2019). Moderasi Beragama. Jakarta: Badan Litbang dan Diklat Kementerian Agama RI.</li>
+      </ul>
+    </section>
+
+    <div class="scroll-hint" id="scrollHint">
+      <i class="fas fa-chevron-down"></i>
+    </div>
+  </div>
+
+  <script>
+    // === Intersection Observer untuk animasi slide saat digulir ===
+    const slides = document.querySelectorAll('.slide');
+
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px 0px -80px 0px',
+      threshold: 0.15
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, observerOptions);
+
+    slides.forEach(slide => observer.observe(slide));
+
+    // === Progress bar scroll ===
+    const progressBar = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+      progressBar.style.width = progress + '%';
+    });
+
+    // === Scroll hint hanya tampil di awal ===
+    const scrollHint = document.getElementById('scrollHint');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 100) {
+        scrollHint.classList.remove('visible');
+        scrollHint.style.opacity = '0';
+      } else {
+        scrollHint.classList.add('visible');
+        scrollHint.style.opacity = '1';
+      }
+    });
+
+    // Tampilkan scroll hint saat pertama kali
+    window.addEventListener('load', () => {
+      scrollHint.classList.add('visible');
+    });
+
+    // === Parallax halus pada slide saat digulir (efek gerak) ===
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+      lastScrollY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          // Efek parallax untuk logo di slide pertama
+          const logo = document.querySelector('.logo-placeholder');
+          if (logo) {
+            const rect = logo.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+            if (rect.top < windowHeight && rect.bottom > 0) {
+              const offset = (rect.top - windowHeight / 2) * 0.03;
+              logo.style.transform = `translateY(${offset}px)`;
+            }
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+
+    // === Efek hover interaktif untuk author card (sudah via CSS) ===
+    // === Efek klik untuk memperbesar card ===
+    document.querySelectorAll('.info-card').forEach(card => {
+      card.addEventListener('click', function() {
+        this.style.transform = 'scale(0.98)';
+        setTimeout(() => {
+          this.style.transform = '';
+        }, 150);
+      });
+    });
+
+    // === Typing effect untuk judul? Tidak perlu, cukup animasi ===
+  </script>
+</body>
+</html>

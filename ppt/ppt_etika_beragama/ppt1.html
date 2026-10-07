@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentasi: Etika Beragama - Mengenal Asal-Usul Manusia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* --- Reset & Global --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0f0c29;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            color: #1a1a2e;
+            user-select: none;
+        }
+
+        /* --- Container Presentasi --- */
+        .presentation-container {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            height: 90vh;
+            max-height: 700px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Slide Area --- */
+        .slides-wrapper {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease, transform 0.5s ease;
+            transform: translateX(30px);
+            background: linear-gradient(145deg, #ffffff, #f0f2f5);
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            z-index: 10;
+        }
+
+        /* --- Slide Content Styling --- */
+        .slide h1 {
+            font-size: 2.4rem;
+            font-weight: 800;
+            color: #1a1a2e;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        .slide h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #302b63;
+            margin-bottom: 20px;
+            border-bottom: 4px solid #f39c12;
+            padding-bottom: 8px;
+            display: inline-block;
+        }
+
+        .slide h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #302b63;
+            margin-bottom: 12px;
+        }
+
+        .slide p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #2d2d44;
+            margin-bottom: 14px;
+            text-align: justify;
+        }
+
+        .slide ul {
+            list-style: none;
+            margin-bottom: 16px;
+        }
+
+        .slide ul li {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #2d2d44;
+            margin-bottom: 8px;
+            padding-left: 28px;
+            position: relative;
+        }
+
+        .slide ul li::before {
+            content: "◆";
+            position: absolute;
+            left: 0;
+            color: #f39c12;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        /* --- Cover Slide --- */
+        .cover-slide {
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(145deg, #1a1a2e, #16213e);
+            color: #fff;
+        }
+
+        .cover-slide h1 {
+            color: #fff;
+            font-size: 2.8rem;
+            margin-bottom: 8px;
+        }
+
+        .cover-slide .subtitle {
+            font-size: 1.3rem;
+            color: #f39c12;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .cover-slide .logo-placeholder {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            font-size: 2.5rem;
+            color: #fff;
+            box-shadow: 0 10px 30px rgba(243, 156, 18, 0.4);
+        }
+
+        .cover-slide .author-info {
+            font-size: 1rem;
+            color: #ccc;
+            line-height: 1.8;
+            margin-top: 20px;
+        }
+
+        .cover-slide .author-info strong {
+            color: #f39c12;
+        }
+
+        .cover-slide .divider {
+            width: 80px;
+            height: 3px;
+            background: #f39c12;
+            margin: 15px auto;
+            border-radius: 2px;
+        }
+
+        /* --- Navigation --- */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 50px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .nav-btn:hover {
+            background: #f39c12;
+            border-color: #f39c12;
+            color: #1a1a2e;
+            transform: scale(1.05);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .nav-btn:disabled:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            transform: none;
+        }
+
+        .slide-counter {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 6px 18px;
+            border-radius: 50px;
+            letter-spacing: 1px;
+        }
+
+        /* --- Progress Bar --- */
+        .progress-bar {
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #f39c12, #e67e22);
+            transition: width 0.5s ease;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* --- Responsive --- */
+        @media (max-width: 768px) {
+            .presentation-container {
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+
+            .slide {
+                padding: 25px 20px;
+            }
+
+            .slide h1 {
+                font-size: 1.6rem;
+            }
+
+            .slide h2 {
+                font-size: 1.3rem;
+            }
+
+            .slide p,
+            .slide ul li {
+                font-size: 0.95rem;
+            }
+
+            .cover-slide h1 {
+                font-size: 1.8rem;
+            }
+
+            .cover-slide .subtitle {
+                font-size: 1rem;
+            }
+
+            .nav-btn {
+                padding: 8px 16px;
+                font-size: 0.85rem;
+            }
+
+            .nav-btn span {
+                display: none;
+            }
+        }
+
+        /* --- Scrollbar --- */
+        .slide::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .slide::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .slide::-webkit-scrollbar-thumb {
+            background: #f39c12;
+            border-radius: 10px;
+        }
+
+        /* --- Animasi masuk --- */
+        .slide.active .animate-in {
+            animation: fadeUp 0.6s ease forwards;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .slide.active .animate-in:nth-child(1) { animation-delay: 0.1s; }
+        .slide.active .animate-in:nth-child(2) { animation-delay: 0.2s; }
+        .slide.active .animate-in:nth-child(3) { animation-delay: 0.3s; }
+        .slide.active .animate-in:nth-child(4) { animation-delay: 0.4s; }
+        .slide.active .animate-in:nth-child(5) { animation-delay: 0.5s; }
+        .slide.active .animate-in:nth-child(6) { animation-delay: 0.6s; }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <!-- Slides Wrapper -->
+        <div class="slides-wrapper" id="slidesWrapper">
+
+            <!-- Slide 1: Cover -->
+            <div class="slide cover-slide active" data-index="0">
+                <div class="logo-placeholder">
+                    <i class="fas fa-book-open"></i>
+                </div>
+                <h1 class="animate-in">MAKALAH ETIKA BERAGAMA</h1>
+                <div class="subtitle animate-in">"Mengenal Asal-Usul Manusia"</div>
+                <div class="divider animate-in"></div>
+                <div class="author-info animate-in">
+                    <strong>Disusun Oleh:</strong><br>
+                    Andhika Satya Reza Noor Fadli (26.83.1243)<br>
+                    Shaquille Murray Bariq Al Na'ir (26.83.1249)<br>
+                    Ghussan Jafis (26.83.1263)<br><br>
+                    <strong>Dosen Pengampu:</strong><br>
+                    Mulyadi Erman, S.Ag., M.A.<br><br>
+                    <strong>SI-TEKNIK KOMPUTER</strong><br>
+                    Fakultas Ilmu Komputer<br>
+                    Universitas Amikom Yogyakarta<br>
+                    2026
+                </div>
+            </div>
+
+            <!-- Slide 2: Kata Pengantar -->
+            <div class="slide" data-index="1">
+                <h2 class="animate-in">Kata Pengantar</h2>
+                <p class="animate-in"><strong>Assalamu'alaikum warahmatullahi wabarakatuh.</strong></p>
+                <p class="animate-in">Alhamdulillahirobil'alaamiin, Segala puji bagi Allah SWT, Tuhan semesta alam, yang telah melimpahkan rahmat, taufik, dan hidayah-Nya sehingga penulis dapat menyelesaikan makalah ini dengan baik. Shalawat serta salam semoga senantiasa tercurah kepada Nabi Muhammad SAW, teladan akhlak yang agung, beserta keluarga, sahabat, dan seluruh pengikutnya hingga akhir zaman.</p>
+                <p class="animate-in">Manusia adalah makhluk yang telah diciptakan oleh Allah SWT. Sangat penting bagi manusia untuk memahami asal usul penciptaannya karena dengan demikian mereka akan bisa mengetahui tentang dirinya sendiri dan tujuan hidup mereka. Menurut Islam pengetahuan tentang manusia berasal dari Al-Quran yang memberikan rincian mengenai penciptaan, esensi dan peran manusia.</p>
+                <p class="animate-in">Makalah ini ditujukan untuk membahas topik "Mengetahui Asal Usul Manusia" yang melibatkan tiga bidang pembahasan yaitu apa itu manusia dan siapa itu manusia, alasan di balik penciptaan manusia dan cara hidup sebagai ciptaan Allah SWT.</p>
+                <p class="animate-in">Penulis menyampaikan terima kasih kepada dosen pengampu mata kuliah atas bimbingan dan arahannya, serta kepada semua pihak yang telah membantu dalam proses penyusunan makalah ini.</p>
+                <p class="animate-in"><strong>Wassalamu'alaikum warahmatullahi wabarakatuh.</strong></p>
+            </div>
+
+            <!-- Slide 3: BAB I - Pendahuluan (A. Apa itu Manusia) -->
+            <div class="slide" data-index="2">
+                <h2 class="animate-in">BAB I — Pendahuluan</h2>
+                <h3 class="animate-in">1.1 Apa dan Siapa Manusia</h3>
+                <h3 class="animate-in" style="color: #e67e22; font-size: 1.1rem;">A. Apa itu Manusia?</h3>
+                <p class="animate-in">Secara universal, manusia adalah makhluk hidup yang memiliki akal, perasaan, kesadaran, dan kemampuan untuk berinteraksi dengan sesama serta lingkungan sekitarnya. Manusia mampu berpikir, belajar, berkomunikasi, mengambil keputusan, dan mengembangkan kebudayaan.</p>
+                <p class="animate-in">Manusia juga merupakan makhluk sosial yang membutuhkan orang lain dalam menjalani kehidupan. Oleh karena itu, manusia memiliki tanggung jawab untuk menghormati hak orang lain, menjaga lingkungan, serta membangun hubungan yang baik dalam masyarakat.</p>
+                <p class="animate-in">Dengan demikian, manusia secara universal dapat dipahami sebagai makhluk yang memiliki kemampuan berpikir, nilai kemanusiaan, dan tanggung jawab moral. Setiap manusia memiliki martabat yang perlu dihormati tanpa membedakan suku, ras, agama, budaya, maupun latar belakangnya.</p>
+            </div>
+
+            <!-- Slide 4: B. Siapa Manusia? -->
+            <div class="slide" data-index="3">
+                <h2 class="animate-in">BAB I — Pendahuluan</h2>
+                <h3 class="animate-in" style="color: #e67e22; font-size: 1.1rem;">B. Siapa Manusia?</h3>
+                <p class="animate-in">Menurut pandangan agama secara universal, manusia adalah makhluk ciptaan Tuhan atau bagian dari tatanan kehidupan yang memiliki nilai dan tujuan hidup. Manusia diberikan kemampuan untuk berpikir, merasakan, memilih, serta membedakan antara perbuatan baik dan buruk. Karena memiliki kemampuan tersebut, manusia juga memiliki tanggung jawab terhadap dirinya sendiri, sesama manusia, lingkungan, dan Tuhan.</p>
+                <p class="animate-in">Dalam berbagai agama, manusia dipandang sebagai makhluk yang harus menjalani kehidupan dengan kebaikan, kasih sayang, keadilan, dan moralitas. Islam memandang manusia sebagai hamba dan khalifah Allah di bumi, Kristen mengajarkan manusia untuk mengasihi Tuhan dan sesama, sementara Hindu, Buddha, dan Konghucu juga memiliki ajaran mengenai pengembangan moral, kebajikan, dan kehidupan yang harmonis.</p>
+                <p class="animate-in">Dengan demikian, meskipun setiap agama memiliki pemahaman yang berbeda mengenai asal-usul dan tujuan manusia, terdapat kesamaan bahwa manusia memiliki nilai, tanggung jawab, dan tujuan dalam menjalani kehidupannya.</p>
+            </div>
+
+            <!-- Slide 5: 1.2 Tujuan Penciptaan Manusia -->
+            <div class="slide" data-index="4">
+                <h2 class="animate-in">Pembahasan</h2>
+                <h3 class="animate-in" style="color: #e67e22; font-size: 1.1rem;">1.2 Tujuan Penciptaan Manusia</h3>
+                <p class="animate-in">Secara umum, tujuan manusia diciptakan atau hidup di dunia dilihat dari tiga sudut: filsafat, sosial, dan biologi. Manusia bertugas menjaga keturunan, membangun peradaban, dan mencari kebahagiaan. Manusia memiliki akal budi dan kemampuan beradaptasi agar dapat mengelola bumi, menciptakan inovasi, serta membangun hubungan sosial yang harmonis dengan sesamanya.</p>
+                <p class="animate-in">Sementara itu, dalam pandangan Islam, tujuan utama penciptaan manusia dipandu secara spiritual yang tertuang langsung dalam kitab suci Al-Qur'an. Manusia diciptakan murni untuk beribadah kepada Allah SWT <em>(sebagaimana disebutkan dalam Surah Az-Zariyat ayat 56)</em> sekaligus mengemban amanah sebagai khalifah (pemimpin/pengelola) di bumi.</p>
+                <p class="animate-in">Ibadah dalam Islam tidak sebatas ritual shalat atau puasa semata, melainkan mencakup seluruh aktivitas kehidupan yang diniatkan karena Allah, termasuk menjaga kelestarian alam, menegakkan keadilan, dan menyebarkan kebaikan bagi seluruh alam semesta <em>(rahmatan lil 'alamin)</em>.</p>
+            </div>
+
+            <!-- Slide 6: 1.3 Paradigma Hidup -->
+            <div class="slide" data-index="5">
+                <h2 class="animate-in">Pembahasan</h2>
+                <h3 class="animate-in" style="color: #e67e22; font-size: 1.1rem;">1.3 Paradigma Hidup Sebagai Manusia Ciptaan Tuhan</h3>
+                <p class="animate-in">Sebagai manusia yang diciptakan oleh Tuhan, kita dianggap sebagai makhluk yang memiliki martabat tinggi, akal, dan nurani. Dalam pandangan ini, makna hidup adalah untuk menjaga keseimbangan alam semesta dan menjalin hubungan yang baik dengan sesama makhluk hidup. Hidup dianggap sebagai jalan untuk terus belajar, mengasah kebaikan, mencintai sesama, dan menggunakan kemampuan terbaik kita sebagai bentuk rasa terima kasih kepada Tuhan.</p>
+                <p class="animate-in">Perbedaan latar belakang tidak jadi penghalang, justru menjadi alat untuk saling melengkapi dalam kerangka kemanusiaan yang utuh.</p>
+                <p class="animate-in">Dengan kesadaran spiritual yang universal, manusia dianggap sebagai pelaku kedamaian yang memiliki tanggung jawab moral di bumi. Setiap orang mempunyai tugas untuk menegakkan keadilan, menyebarkan kasih sayang, dan menjaga lingkungan agar bisa diwariskan kepada generasi berikutnya.</p>
+            </div>
+
+            <!-- Slide 7: Pandangan Agama-Agama -->
+            <div class="slide" data-index="6">
+                <h2 class="animate-in">Pandangan Agama-Agama</h2>
+                <ul>
+                    <li class="animate-in"><strong>Islam:</strong> Manusia diciptakan untuk beribadah kepada Allah dan menjalankan tugas sebagai khalifah di bumi, memakmurkan dunia sesuai syariat-Nya.</li>
+                    <li class="animate-in"><strong>Kristen & Katolik:</strong> Manusia dianggap sebagai gambar dan rupa Tuhan yang diutus untuk merawat ciptaan dengan baik dan penuh kasih.</li>
+                    <li class="animate-in"><strong>Hindu:</strong> Manusia adalah bagian dari ketuhanan yang harus menjalankan dharma untuk mencapai keseimbangan.</li>
+                    <li class="animate-in"><strong>Buddhisme:</strong> Manusia bertanggung jawab atas perbuatannya dan berusaha membebaskan diri dari penderitaan melalui hukum karma.</li>
+                </ul>
+                <p class="animate-in" style="margin-top: 10px; font-weight: 600; color: #302b63;">Keseluruhan agama ini sepakat bahwa manusia bukan pemilik sejati dirinya, tapi utusan Tuhan yang akan diminta pertanggungjawaban atas segala perbuatannya.</p>
+            </div>
+
+            <!-- Slide 8: BAB III - Kesimpulan -->
+            <div class="slide" data-index="7">
+                <h2 class="animate-in">BAB III — Kesimpulan</h2>
+                <p class="animate-in">Manusia adalah makhluk yang diciptakan oleh Tuhan. Mereka memiliki akal, perasaan, kesadaran, serta kemampuan untuk berpikir dan berinteraksi dengan orang lain. Manusia tidak hanya hidup untuk memenuhi kebutuhan diri sendiri, tetapi juga punya tanggung jawab untuk berbuat baik, menghormati sesama, menjaga lingkungan, dan menciptakan kehidupan yang baik dan seimbang.</p>
+                <p class="animate-in">Dari sudut pandang agama, manusia memiliki nilai dan tujuan dalam hidup. Meski setiap agama punya pandangan yang berbeda tentang asal-usul dan tujuan manusia, mereka semua sepakat bahwa manusia harus hidup dengan kebaikan, kasih sayang, keadilan, dan sikap moral yang baik. Dalam Islam, manusia dianggap sebagai hamba Allah SWT, tetapi juga sebagai khalifah di bumi yang tugasnya adalah beribadah dan menjaga kehidupan dengan baik.</p>
+                <p class="animate-in">Akhirnya, menjadi manusia tidak hanya tentang bertahan hidup, tetapi juga tentang bagaimana kita memberi makna pada kehidupan. Dengan menggunakan akal dan hati untuk berbuat baik, menjaga sesama, serta menjalankan tanggung jawab kepada Tuhan dan lingkungan, manusia bisa menjadi pribadi yang bermanfaat dan meninggalkan kebaikan untuk generasi yang akan datang.</p>
+            </div>
+
+            <!-- Slide 9: Daftar Pustaka -->
+            <div class="slide" data-index="8">
+                <h2 class="animate-in">Daftar Pustaka</h2>
+                <ul style="font-size: 0.95rem;">
+                    <li class="animate-in">Al-Qur'an al-Karim.</li>
+                    <li class="animate-in">Al-Qur'an dan Terjemahannya. (2019). Jakarta: Kementerian Agama Republik Indonesia.</li>
+                    <li class="animate-in">Al-Ghazali, Imam. (2018). <em>Ihya' 'Ulumiddin</em>. Jakarta: Republika.</li>
+                    <li class="animate-in">Kaelany, H. D. (2005). <em>Islam dan Aspek-Aspek Kemasyarakatan</em>. Jakarta: Bumi Aksara.</li>
+                    <li class="animate-in">Nata, Abuddin. (2016). <em>Akhlak Tasawuf dan Karakter Mulia</em>. Jakarta: Rajawali Pers.</li>
+                    <li class="animate-in">Shihab, M. Quraish. (2013). <em>Wawasan Al-Qur'an: Tafsir Tematik atas Pelbagai Persoalan Umat</em>. Bandung: Mizan.</li>
+                    <li class="animate-in">Shihab, M. Quraish. (2018). <em>Membumikan Al-Qur'an: Fungsi dan Peran Wahyu dalam Kehidupan Masyarakat</em>. Bandung: Mizan.</li>
+                    <li class="animate-in">Syalut, Mahmud. (2001). <em>Islam: Aqidah dan Syariah</em>. Jakarta: Pustaka Amani.</li>
+                    <li class="animate-in">Kementerian Agama Republik Indonesia. (2019). <em>Moderasi Beragama</em>. Jakarta: Badan Litbang dan Diklat Kementerian Agama RI.</li>
+                </ul>
+            </div>
+
+        </div>
+
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" disabled>
+                <i class="fas fa-chevron-left"></i>
+                <span>Sebelumnya</span>
+            </button>
+            <div class="slide-counter" id="slideCounter">1 / 9</div>
+            <button class="nav-btn" id="nextBtn">
+                <span>Selanjutnya</span>
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const slideCounter = document.getElementById('slideCounter');
+            const progressFill = document.getElementById('progressFill');
+            const totalSlides = slides.length;
+            let currentIndex = 0;
+
+            // Fungsi untuk menampilkan slide
+            function showSlide(index) {
+                // Batasi index
+                if (index < 0) index = 0;
+                if (index >= totalSlides) index = totalSlides - 1;
+
+                // Update active class
+                slides.forEach((slide, i) => {
+                    slide.classList.toggle('active', i === index);
+                });
+
+                // Update counter
+                slideCounter.textContent = `${index + 1} / ${totalSlides}`;
+
+                // Update progress bar
+                const progress = ((index + 1) / totalSlides) * 100;
+                progressFill.style.width = progress + '%';
+
+                // Update button states
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === totalSlides - 1;
+
+                // Update current index
+                currentIndex = index;
+
+                // Simpan ke localStorage (opsional)
+                try {
+                    localStorage.setItem('currentSlide', index);
+                } catch (e) {}
+            }
+
+            // Navigasi
+            prevBtn.addEventListener('click', () => {
+                showSlide(currentIndex - 1);
+            });
+
+            nextBtn.addEventListener('click', () => {
+                showSlide(currentIndex + 1);
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    if (currentIndex < totalSlides - 1) {
+                        showSlide(currentIndex + 1);
+                    }
+                } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    if (currentIndex > 0) {
+                        showSlide(currentIndex - 1);
+                    }
+                } else if (e.key === 'Home') {
+                    e.preventDefault();
+                    showSlide(0);
+                } else if (e.key === 'End') {
+                    e.preventDefault();
+                    showSlide(totalSlides - 1);
+                }
+            });
+
+            // Touch swipe support
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            document.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            document.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const diff = touchStartX - touchEndX;
+
+                if (Math.abs(diff) > swipeThreshold) {
+                    if (diff > 0 && currentIndex < totalSlides - 1) {
+                        showSlide(currentIndex + 1);
+                    } else if (diff < 0 && currentIndex > 0) {
+                        showSlide(currentIndex - 1);
+                    }
+                }
+            }
+
+            // Inisialisasi: coba muat slide terakhir dari localStorage
+            let savedIndex = 0;
+            try {
+                const saved = localStorage.getItem('currentSlide');
+                if (saved !== null) {
+                    savedIndex = parseInt(saved, 10);
+                    if (isNaN(savedIndex) || savedIndex < 0 || savedIndex >= totalSlides) {
+                        savedIndex = 0;
+                    }
+                }
+            } catch (e) {}
+
+            showSlide(savedIndex);
+        })();
+    </script>
+</body>
+</html>

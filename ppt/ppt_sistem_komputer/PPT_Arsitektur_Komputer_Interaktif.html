@@ -1,0 +1,376 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Arsitektur Komputer — Presentasi Interaktif</title>
+<style>
+  :root{
+    --bg1:#090b24;
+    --bg2:#11183d;
+    --glass:rgba(255,255,255,.10);
+    --glass2:rgba(255,255,255,.06);
+    --line:rgba(255,255,255,.17);
+    --text:#f7f8ff;
+    --muted:#bec4df;
+    --accent:#8b7cff;
+    --accent2:#5ce1e6;
+    --radius:24px;
+    --shadow:0 24px 70px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:#090b24}
+  body:before, body:after{content:"";position:fixed;inset:-20%;z-index:-3;pointer-events:none;filter:blur(80px);opacity:.70;animation:float 18s ease-in-out infinite alternate}
+  body:before{background:radial-gradient(circle at 25% 30%,#7c5cff 0,transparent 34%),radial-gradient(circle at 74% 22%,#00d4ff 0,transparent 28%),radial-gradient(circle at 68% 78%,#ff4fd8 0,transparent 33%)}
+  body:after{background:radial-gradient(circle at 15% 80%,#ff7a45 0,transparent 24%),radial-gradient(circle at 85% 58%,#5b6cff 0,transparent 30%);animation-duration:24s;animation-direction:alternate-reverse}
+  @keyframes float{to{transform:translate3d(3%, -2%, 0) scale(1.04)}}
+  .grain{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.05;background-image:radial-gradient(rgba(255,255,255,.8) .5px, transparent .5px);background-size:8px 8px}
+  .deck{position:relative;width:100vw;height:100vh}
+  .slide{position:absolute;inset:0;padding:clamp(28px,4vw,64px);display:flex;flex-direction:column;justify-content:center;opacity:0;visibility:hidden;transform:translateX(45px) scale(.985);transition:opacity .45s ease,transform .60s cubic-bezier(.22,1,.36,1),visibility 0s linear .6s;}
+  .slide.active{opacity:1;visibility:visible;transform:none;transition:opacity .45s ease,transform .60s cubic-bezier(.22,1,.36,1),visibility 0s}
+  .slide.prev{transform:translateX(-45px) scale(.985)}
+  .content{width:min(1200px,100%);margin:0 auto}
+  .eyebrow{font-size:.78rem;letter-spacing:.20em;text-transform:uppercase;color:#d7dcf7;font-weight:700;margin-bottom:12px}
+  h1,h2{margin:0;line-height:1.02;letter-spacing:-.03em}
+  h1{font-size:clamp(3rem,7vw,7.2rem);max-width:980px}
+  h2{font-size:clamp(2rem,4vw,4rem)}
+  .lead{font-size:clamp(1rem,1.5vw,1.35rem);line-height:1.6;color:var(--muted);max-width:850px;margin:20px 0 0}
+  .grad-text{background:linear-gradient(90deg,#fff,#b9d6ff 40%,#f6a7ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .meta-row{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+  .pill{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border:1px solid var(--line);background:var(--glass2);backdrop-filter:blur(14px);border-radius:999px;color:#e8ebff;font-size:.85rem}
+  .panel{background:linear-gradient(180deg,rgba(255,255,255,.13),rgba(255,255,255,.055));border:1px solid var(--line);box-shadow:var(--shadow);backdrop-filter:blur(18px);border-radius:var(--radius)}
+  .grid{display:grid;gap:16px}
+  .grid-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .grid-3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .grid-4{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .card{padding:20px;min-height:100px;position:relative;overflow:hidden}
+  .card:after{content:"";position:absolute;inset:auto -10% -70% 40%;height:120px;background:radial-gradient(circle,rgba(129,118,255,.18),transparent 66%);pointer-events:none}
+  .num{font-size:.72rem;color:#b6bdf0;font-weight:800;letter-spacing:.12em}
+  .term{font-size:1.03rem;font-weight:800;margin-top:7px}
+  .desc{font-size:.86rem;color:var(--muted);line-height:1.45;margin-top:8px}
+  .split{display:grid;grid-template-columns:1.05fr .95fr;gap:22px;align-items:stretch}
+  .hero-card{padding:30px}
+  .feature{display:flex;gap:14px;align-items:flex-start;padding:16px 0;border-bottom:1px solid rgba(255,255,255,.10)}
+  .feature:last-child{border-bottom:0}
+  .icon{width:38px;height:38px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(139,124,255,.35),rgba(92,225,230,.18));border:1px solid rgba(255,255,255,.18);flex:0 0 auto}
+  .feature b{display:block;margin-bottom:4px}
+  .feature span{color:var(--muted);font-size:.9rem;line-height:1.45}
+  .quote{font-size:clamp(1.15rem,2vw,1.65rem);line-height:1.5;color:#eae9ff}
+  .quote strong{color:white}
+  .diagram-wrap{display:grid;grid-template-columns:1.65fr .72fr;gap:18px;align-items:stretch}
+  .diagram-panel{padding:18px;min-height:500px;display:grid;place-items:center}
+  .diagram-panel svg{width:100%;height:auto;max-height:520px;display:block}
+  .node{cursor:pointer;transition:transform .2s ease,filter .2s ease}
+  .node:hover{filter:brightness(1.15);transform:translateY(-2px)}
+  .node.active rect{stroke:#fff;stroke-width:2.3}
+  .side-info{padding:24px;display:flex;flex-direction:column;justify-content:space-between;min-height:500px}
+  .side-info h3{font-size:1.5rem;margin:6px 0 8px}
+  .side-info p{color:var(--muted);line-height:1.55;margin:0}
+  .side-list{margin-top:18px;display:grid;gap:9px}
+  .side-chip{padding:10px 12px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);color:#d9ddf5;font-size:.84rem}
+  .footnote{font-size:.76rem;color:#aeb5d4;margin-top:12px}
+  .topline{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:24px}
+  .progress{height:5px;border-radius:999px;background:rgba(255,255,255,.08);overflow:hidden;flex:1}
+  .progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8b7cff,#5ce1e6,#f6a7ff);transition:width .4s ease}
+  .counter{font-size:.8rem;color:#b7bddb;min-width:54px;text-align:right}
+  .nav{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);display:flex;align-items:center;gap:9px;padding:8px;border:1px solid rgba(255,255,255,.16);background:rgba(7,10,28,.48);backdrop-filter:blur(16px);border-radius:999px;z-index:20}
+  button{border:0;color:#fff;background:transparent;font:inherit;cursor:pointer}
+  .nav-btn{width:39px;height:39px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.10);transition:.2s}
+  .nav-btn:hover{background:rgba(255,255,255,.13);transform:translateY(-1px)}
+  .dots{display:flex;gap:6px;padding:0 5px}
+  .dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.28);padding:0;transition:.25s}
+  .dot.active{width:22px;border-radius:999px;background:#fff}
+  .hint{position:fixed;right:22px;bottom:22px;z-index:20;color:#aeb5d4;font-size:.75rem;display:flex;gap:8px;align-items:center}
+  kbd{font:inherit;color:#dce1fb;border:1px solid rgba(255,255,255,.16);border-bottom-color:rgba(255,255,255,.28);padding:4px 7px;border-radius:7px;background:rgba(255,255,255,.05)}
+  .appear{opacity:0;transform:translateY(18px);transition:opacity .65s ease,transform .65s ease}
+  .active .appear{opacity:1;transform:none}
+  .active .delay-1{transition-delay:.08s}.active .delay-2{transition-delay:.16s}.active .delay-3{transition-delay:.24s}.active .delay-4{transition-delay:.32s}
+  .center{text-align:center;align-items:center}
+  .big-stat{font-size:clamp(3rem,8vw,7rem);font-weight:900;line-height:1;background:linear-gradient(90deg,#fff,#c8c8ff,#8cecf1);-webkit-background-clip:text;color:transparent}
+  .mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:24px}
+  .mini{padding:16px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.06)}
+  .mini strong{font-size:1.1rem}.mini span{display:block;color:var(--muted);font-size:.78rem;margin-top:6px;line-height:1.4}
+  .callout{margin-top:24px;padding:18px 20px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.06);border-radius:18px;color:#dce0f6;line-height:1.55}
+  .two-col-list{columns:2;column-gap:28px}
+  .abbr{padding:12px 0;border-bottom:1px dashed rgba(255,255,255,.12);break-inside:avoid}
+  .abbr b{color:#fff}.abbr span{color:var(--muted);font-size:.86rem}
+  .closing{display:flex;flex-direction:column;align-items:center;text-align:center}
+  .closing .panel{padding:44px;max-width:780px}
+  .source{margin-top:16px;color:#aeb5d4;font-size:.78rem}
+  @media(max-width:900px){
+    .split,.diagram-wrap{grid-template-columns:1fr}.grid-4{grid-template-columns:repeat(2,1fr)}.diagram-panel,.side-info{min-height:auto}.two-col-list{columns:1}.hint{display:none}
+    .slide{padding:28px 22px 92px;overflow:auto}.nav{bottom:12px}
+  }
+  @media(max-width:620px){.grid-3{grid-template-columns:1fr}.grid-2{grid-template-columns:1fr}.grid-4{grid-template-columns:1fr}.mini-grid{grid-template-columns:1fr}h1{font-size:3rem}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="deck" id="deck">
+  <section class="slide active" data-title="Pembuka">
+    <div class="content split">
+      <div class="hero-card panel appear delay-1">
+        <div class="eyebrow">Laporan Hasil Praktikum 11 · Kelompok 4</div>
+        <h1 class="grad-text">Pengantar Sistem Komputer</h1>
+        <p class="lead">Mengenal arsitektur komputer dan memahami susunan komponen pada arsitektur PC modern.</p>
+        <div class="meta-row">
+          <span class="pill">Teknik Komputer</span><span class="pill">Universitas AMIKOM Yogyakarta</span><span class="pill">2026</span>
+        </div>
+      </div>
+      <div class="panel hero-card appear delay-3">
+        <div class="eyebrow">Disusun oleh</div>
+        <div class="feature"><div class="icon">01</div><div><b>Iqbal Maulana</b><span>26.83.1253</span></div></div>
+        <div class="feature"><div class="icon">02</div><div><b>Haydar Nur Fairuz Setiawan</b><span>26.83.1258</span></div></div>
+        <div class="feature"><div class="icon">03</div><div><b>Rajib Khan</b><span>26.83.1241</span></div></div>
+        <div class="feature"><div class="icon">04</div><div><b>Ghussan Jafis</b><span>26.83.1263</span></div></div>
+        <div class="feature"><div class="icon">05</div><div><b>Bayu Herlambang</b><span>26.83.1238</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Pendahuluan">
+    <div class="content">
+      <div class="eyebrow appear">01 · Pendahuluan</div>
+      <h2 class="appear delay-1">Komputer bekerja sebagai sebuah sistem.</h2>
+      <p class="lead appear delay-2">Komputer menerima data, mengolahnya, menyimpan hasilnya, lalu menampilkan informasi. Proses ini berjalan melalui keterkaitan perangkat keras, perangkat lunak, dan pengguna.</p>
+      <div class="grid grid-3" style="margin-top:28px">
+        <div class="card panel appear delay-2"><div class="num">01</div><div class="term">Hardware</div><div class="desc">Perangkat keras seperti CPU, memory, input, output, bus, dan motherboard.</div></div>
+        <div class="card panel appear delay-3"><div class="num">02</div><div class="term">Software</div><div class="desc">Perangkat lunak yang memberikan instruksi agar komputer dapat menjalankan tugas.</div></div>
+        <div class="card panel appear delay-4"><div class="num">03</div><div class="term">Brainware</div><div class="desc">Pengguna yang berinteraksi dengan komputer dan menjalankan fungsi sistem.</div></div>
+      </div>
+      <div class="callout appear delay-4">Tujuan praktikum: mengenali bagian-bagian komputer, membedakan perangkat input dan output, mengenal arsitektur komputer, dan memahami arsitektur PC modern.</div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Singkatan Arsitektur">
+    <div class="content">
+      <div class="eyebrow appear">02 · Mengenal Arsitektur Komputer</div>
+      <h2 class="appear delay-1">14 singkatan komponen yang perlu dikenali.</h2>
+      <div class="panel hero-card appear delay-2" style="margin-top:24px">
+        <div class="two-col-list">
+          <div class="abbr"><b>GPU</b> <span>Graphics Processing Unit</span></div>
+          <div class="abbr"><b>AGP</b> <span>Accelerated Graphics Port</span></div>
+          <div class="abbr"><b>HDD</b> <span>Hard Disk Drive</span></div>
+          <div class="abbr"><b>FDD</b> <span>Floppy Disk Drive</span></div>
+          <div class="abbr"><b>FSB</b> <span>Front Side Bus</span></div>
+          <div class="abbr"><b>USB</b> <span>Universal Serial Bus</span></div>
+          <div class="abbr"><b>PCI</b> <span>Peripheral Component Interconnect</span></div>
+          <div class="abbr"><b>RTC</b> <span>Real-Time Clock</span></div>
+          <div class="abbr"><b>PATA</b> <span>Parallel Advanced Technology Attachment</span></div>
+          <div class="abbr"><b>SATA</b> <span>Serial Advanced Technology Attachment</span></div>
+          <div class="abbr"><b>ISA</b> <span>Industry Standard Architecture</span></div>
+          <div class="abbr"><b>IDE</b> <span>Integrated Drive Electronics</span></div>
+          <div class="abbr"><b>MCA</b> <span>Micro Chanel</span></div>
+          <div class="abbr"><b>PS/2</b> <span>Personal System/2</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Peta PC Modern">
+    <div class="content">
+      <div class="eyebrow appear">03 · Mengenal Arsitektur PC Modern</div>
+      <h2 class="appear delay-1">Lihat hubungan komponen secara langsung.</h2>
+      <p class="lead appear delay-2">Klik salah satu blok pada diagram untuk menyorot peran komponen.</p>
+      <div class="diagram-wrap" style="margin-top:18px">
+        <div class="panel diagram-panel appear delay-2">
+          <svg viewBox="0 0 920 550" role="img" aria-label="Diagram arsitektur PC modern">
+            <defs>
+              <linearGradient id="g" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#8b7cff"/><stop offset="1" stop-color="#5ce1e6"/></linearGradient>
+              <filter id="glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <g stroke="rgba(255,255,255,.24)" stroke-width="2" fill="none">
+              <path d="M190 95H370M190 120H370M540 95H730M370 165V205M545 165V205M730 165V205M280 265H420M510 265H650M420 300H420M650 300H650M420 340H650M230 390H420M650 390H760M420 420H420M650 420H650"/>
+            </g>
+            <g font-family="Inter,Arial,sans-serif" font-size="16" fill="#fff" text-anchor="middle">
+              <g class="node" data-info="Processor menjalankan instruksi dan mengolah data komputer."><rect x="70" y="55" width="150" height="90" rx="18" fill="url(#g)"/><text x="145" y="92" font-weight="800">Processor</text><text x="145" y="117" font-size="13">Cache</text></g>
+              <g class="node" data-info="GPU mengolah dan menghasilkan tampilan grafis."><rect x="350" y="55" width="180" height="55" rx="16" fill="rgba(139,124,255,.45)" stroke="rgba(255,255,255,.16)"/><text x="440" y="89" font-weight="800">GPU</text></g>
+              <g class="node" data-info="Monitor menjadi perangkat output untuk menampilkan visual dari GPU."><rect x="690" y="55" width="150" height="55" rx="16" fill="rgba(92,225,230,.26)" stroke="rgba(255,255,255,.16)"/><text x="765" y="89" font-weight="800">Monitor</text></g>
+              <g class="node" data-info="Memory menyimpan data sementara yang sedang digunakan komputer."><rect x="610" y="125" width="150" height="70" rx="16" fill="rgba(246,167,255,.20)" stroke="rgba(255,255,255,.16)"/><text x="685" y="153" font-weight="800">Memory</text><text x="685" y="176" font-size="12">Memory Controller</text></g>
+              <g class="node" data-info="AGP Controller menghubungkan kartu grafis melalui slot AGP."><rect x="275" y="125" width="190" height="70" rx="16" fill="rgba(139,124,255,.20)" stroke="rgba(255,255,255,.16)"/><text x="370" y="163" font-weight="800">AGP Controller</text></g>
+              <g class="node" data-info="Northbridge mengatur komunikasi antara processor, memory, dan grafis."><rect x="335" y="205" width="180" height="55" rx="16" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.20)"/><text x="425" y="239" font-weight="800">Northbridge</text></g>
+              <g class="node" data-info="Southbridge mengatur komunikasi dengan perangkat I/O seperti USB, SATA, dan PCI."><rect x="335" y="285" width="180" height="55" rx="16" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.20)"/><text x="425" y="319" font-weight="800">Southbridge</text></g>
+              <g class="node" data-info="USB Controller mengatur komunikasi perangkat USB dengan komputer."><rect x="70" y="235" width="180" height="55" rx="16" fill="rgba(92,225,230,.17)" stroke="rgba(255,255,255,.16)"/><text x="160" y="269" font-weight="800">USB Controller</text></g>
+              <g class="node" data-info="Network Controller mengatur koneksi jaringan komputer."><rect x="70" y="330" width="180" height="55" rx="16" fill="rgba(92,225,230,.17)" stroke="rgba(255,255,255,.16)"/><text x="160" y="364" font-weight="800">Network Controller</text></g>
+              <g class="node" data-info="PCI Bus menjadi jalur komunikasi utama antara Southbridge dan perangkat PCI."><rect x="335" y="365" width="180" height="55" rx="16" fill="rgba(255,255,255,.10)" stroke="rgba(255,255,255,.20)"/><text x="425" y="399" font-weight="800">PCI Bus</text></g>
+              <g class="node" data-info="IDE Controller menjadi antarmuka untuk perangkat penyimpanan HDD/Optical."><rect x="600" y="330" width="170" height="55" rx="16" fill="rgba(246,167,255,.16)" stroke="rgba(255,255,255,.16)"/><text x="685" y="364" font-weight="800">IDE Controller</text></g>
+              <g class="node" data-info="Storage dan perangkat input/output terhubung melalui jalur dan controller yang sesuai."><rect x="615" y="420" width="235" height="70" rx="16" fill="rgba(246,167,255,.12)" stroke="rgba(255,255,255,.16)"/><text x="732" y="447" font-weight="800">I/O & Storage</text><text x="732" y="471" font-size="12">HDD · Optical · USB · FDD</text></g>
+            </g>
+          </svg>
+        </div>
+        <div class="panel side-info appear delay-3" id="diagramInfo">
+          <div>
+            <div class="eyebrow">Komponen aktif</div>
+            <h3 id="infoTitle">Processor</h3>
+            <p id="infoText">Komponen utama yang menjalankan instruksi dan mengolah data komputer.</p>
+            <div class="side-list">
+              <div class="side-chip">Pemrosesan → Processor + Cache</div>
+              <div class="side-chip">Grafis → GPU + Monitor</div>
+              <div class="side-chip">Memori → Memory + Controller</div>
+              <div class="side-chip">I/O → Southbridge + Controller</div>
+            </div>
+          </div>
+          <div class="footnote">Interaktif: klik blok pada diagram.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Komponen 1-10">
+    <div class="content">
+      <div class="eyebrow appear">04 · Komponen Arsitektur PC Modern</div>
+      <h2 class="appear delay-1">Pusat pemrosesan & pengendali utama.</h2>
+      <div class="grid grid-2" style="margin-top:22px">
+        <div class="card panel appear delay-1"><div class="num">01</div><div class="term">Processor</div><div class="desc">Komponen utama yang menjalankan instruksi dan mengolah data komputer.</div></div>
+        <div class="card panel appear delay-2"><div class="num">02</div><div class="term">Cache</div><div class="desc">Memori berkecepatan tinggi di dalam processor untuk mempercepat kerja prosesor.</div></div>
+        <div class="card panel appear delay-3"><div class="num">03</div><div class="term">GPU</div><div class="desc">Komponen yang mengolah dan menghasilkan tampilan grafis.</div></div>
+        <div class="card panel appear delay-4"><div class="num">04</div><div class="term">Monitor</div><div class="desc">Perangkat output untuk menampilkan visual dari GPU.</div></div>
+        <div class="card panel appear delay-1"><div class="num">05</div><div class="term">Memory</div><div class="desc">Tempat penyimpanan data sementara yang sedang digunakan komputer.</div></div>
+        <div class="card panel appear delay-2"><div class="num">06</div><div class="term">Memory Controller</div><div class="desc">Pengendali yang mengatur komunikasi antara memory dengan sistem.</div></div>
+        <div class="card panel appear delay-3"><div class="num">07</div><div class="term">AGP Controller</div><div class="desc">Pengendali untuk menghubungkan kartu grafis melalui slot AGP.</div></div>
+        <div class="card panel appear delay-4"><div class="num">08</div><div class="term">FSB / Front Side Bus</div><div class="desc">Jalur komunikasi utama ke Northbridge dari processor dan controller terkait.</div></div>
+        <div class="card panel appear delay-1"><div class="num">09</div><div class="term">Northbridge</div><div class="desc">Chipset yang mengatur komunikasi antara processor, memory, dan grafis.</div></div>
+        <div class="card panel appear delay-2"><div class="num">10</div><div class="term">Southbridge</div><div class="desc">Chipset yang mengatur komunikasi dengan I/O seperti USB, SATA, dan PCI.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Komponen 11-18">
+    <div class="content">
+      <div class="eyebrow appear">05 · Perangkat & Controller</div>
+      <h2 class="appear delay-1">Jalur I/O mulai bercabang.</h2>
+      <div class="grid grid-2" style="margin-top:22px">
+        <div class="card panel appear delay-1"><div class="num">11</div><div class="term">Firewire Drive</div><div class="desc">Perangkat penyimpanan/periferal yang menggunakan antarmuka Firewire.</div></div>
+        <div class="card panel appear delay-2"><div class="num">12</div><div class="term">Firewire Controller</div><div class="desc">Pengendali komunikasi untuk perangkat Firewire.</div></div>
+        <div class="card panel appear delay-3"><div class="num">13</div><div class="term">USB Drive</div><div class="desc">Perangkat penyimpanan yang terhubung melalui USB.</div></div>
+        <div class="card panel appear delay-4"><div class="num">14</div><div class="term">USB Controller</div><div class="desc">Mengatur komunikasi perangkat USB dengan komputer.</div></div>
+        <div class="card panel appear delay-1"><div class="num">15</div><div class="term">Network Controller</div><div class="desc">Komponen yang mengatur koneksi jaringan komputer.</div></div>
+        <div class="card panel appear delay-2"><div class="num">16</div><div class="term">PCI Bus</div><div class="desc">Jalur komunikasi utama yang menghubungkan Southbridge dengan perangkat PCI.</div></div>
+        <div class="card panel appear delay-3"><div class="num">17</div><div class="term">Optical Drive</div><div class="desc">Perangkat untuk membaca atau menulis data pada CD atau DVD.</div></div>
+        <div class="card panel appear delay-4"><div class="num">18</div><div class="term">IDE Controller</div><div class="desc">Antarmuka untuk menghubungkan perangkat penyimpanan HDD/Optical.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Komponen 19-27">
+    <div class="content">
+      <div class="eyebrow appear">06 · Antarmuka Lama & Penyimpanan</div>
+      <h2 class="appear delay-1">Bridge, port, bus, dan controller.</h2>
+      <div class="grid grid-3" style="margin-top:22px">
+        <div class="card panel appear delay-1"><div class="num">19</div><div class="term">PCI-ISA Bridge</div><div class="desc">Jembatan yang menghubungkan bus PCI dengan bus ISA.</div></div>
+        <div class="card panel appear delay-2"><div class="num">20</div><div class="term">Serial Port</div><div class="desc">Port untuk menghubungkan perangkat menggunakan komunikasi serial.</div></div>
+        <div class="card panel appear delay-3"><div class="num">21</div><div class="term">ISA Bus</div><div class="desc">Jalur komunikasi generasi lama untuk perangkat ekspansi ISA.</div></div>
+        <div class="card panel appear delay-1"><div class="num">22</div><div class="term">PATA / SATA</div><div class="desc">Standar koneksi untuk perangkat penyimpanan hard disk.</div></div>
+        <div class="card panel appear delay-2"><div class="num">23</div><div class="term">Parallel Port</div><div class="desc">Port yang mengirimkan beberapa bit data secara bersamaan.</div></div>
+        <div class="card panel appear delay-3"><div class="num">24</div><div class="term">RTC</div><div class="desc">Komponen yang menjaga waktu dan tanggal komputer.</div></div>
+        <div class="card panel appear delay-1"><div class="num">25</div><div class="term">MCA Controller</div><div class="desc">Pengendali untuk perangkat dengan standar Micro Channel Architecture.</div></div>
+        <div class="card panel appear delay-2"><div class="num">26</div><div class="term">FDD</div><div class="desc">Perangkat untuk membaca dan menulis data pada floppy disk.</div></div>
+        <div class="card panel appear delay-3"><div class="num">27</div><div class="term">Optical Drive</div><div class="desc">Drive kedua untuk membaca atau menulis data pada CD atau DVD.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Komponen 28-36">
+    <div class="content">
+      <div class="eyebrow appear">07 · Storage & Input</div>
+      <h2 class="appear delay-1">Komponen penunjang sampai perangkat input.</h2>
+      <div class="grid grid-3" style="margin-top:22px">
+        <div class="card panel appear delay-1"><div class="num">28</div><div class="term">SCSI Controller</div><div class="desc">Antarmuka untuk menghubungkan berbagai perangkat penyimpanan berkecepatan tinggi.</div></div>
+        <div class="card panel appear delay-2"><div class="num">29</div><div class="term">HDD</div><div class="desc">Media penyimpanan data menggunakan piringan magnetik (sisi kiri).</div></div>
+        <div class="card panel appear delay-3"><div class="num">30</div><div class="term">Tape / Backup Drive</div><div class="desc">Perangkat backup data menggunakan pita magnetik (sisi kiri).</div></div>
+        <div class="card panel appear delay-1"><div class="num">31</div><div class="term">HDD</div><div class="desc">Media penyimpanan data menggunakan piringan magnetik (sisi tengah).</div></div>
+        <div class="card panel appear delay-2"><div class="num">32</div><div class="term">Tape / Backup Drive</div><div class="desc">Perangkat backup data menggunakan pita magnetik (sisi tengah).</div></div>
+        <div class="card panel appear delay-3"><div class="num">33</div><div class="term">Keyboard</div><div class="desc">Perangkat input untuk memasukkan huruf dan perintah.</div></div>
+        <div class="card panel appear delay-1"><div class="num">34</div><div class="term">MCA Bus</div><div class="desc">Jalur komunikasi yang digunakan oleh perangkat berbasis MCA.</div></div>
+        <div class="card panel appear delay-2"><div class="num">35</div><div class="term">Mouse</div><div class="desc">Perangkat input untuk menggerakkan kursor.</div></div>
+        <div class="card panel appear delay-3"><div class="num">36</div><div class="term">PS/2 Controller</div><div class="desc">Pengendali komunikasi untuk keyboard dan mouse PS/2.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Ringkasan Alur">
+    <div class="content split">
+      <div>
+        <div class="eyebrow appear">08 · Ringkasan</div>
+        <h2 class="appear delay-1">Dari pemrosesan sampai output.</h2>
+        <p class="lead appear delay-2">Laporan menempatkan processor dan cache sebagai pusat pemrosesan, memory sebagai penyimpanan sementara, GPU sebagai pengolah grafis, dan chipset/bus sebagai penghubung ke perangkat I/O.</p>
+      </div>
+      <div class="panel hero-card appear delay-3">
+        <div class="big-stat">01 → 04</div>
+        <div class="mini-grid">
+          <div class="mini"><strong>Process</strong><span>Processor + Cache menjalankan instruksi.</span></div>
+          <div class="mini"><strong>Memory</strong><span>Data sementara digunakan sistem.</span></div>
+          <div class="mini"><strong>Graph</strong><span>GPU mengolah dan menampilkan visual.</span></div>
+        </div>
+        <div class="callout">Jalur I/O kemudian menghubungkan berbagai controller, bus, storage, network, dan perangkat input/output.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="slide" data-title="Kesimpulan">
+    <div class="content closing">
+      <div class="panel appear delay-1">
+        <div class="eyebrow">09 · Kesimpulan</div>
+        <h2 class="grad-text">Komputer adalah sebuah sistem yang saling terhubung.</h2>
+        <p class="lead" style="margin-left:auto;margin-right:auto">Arsitektur komputer merupakan susunan dan hubungan berbagai komponen yang bekerja bersama. Pada arsitektur PC modern, setiap komponen memiliki peran dalam komunikasi dan pengolahan data - dari processor dan cache, memory, hingga jalur I/O dan perangkat pendukung.</p>
+        <div class="source">Berdasarkan Laporan Hasil Praktikum 11 · Pengantar Sistem Komputer · Kelompok 4 · 2026</div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<div class="nav" aria-label="Navigasi slide">
+  <button class="nav-btn" id="prev" aria-label="Slide sebelumnya">←</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn" id="next" aria-label="Slide berikutnya">→</button>
+</div>
+<div class="hint"><kbd>←</kbd><kbd>→</kbd> navigasi · <kbd>F</kbd> layar penuh</div>
+
+<script>
+const slides=[...document.querySelectorAll('.slide')];
+const dots=document.getElementById('dots');
+let index=0;
+slides.forEach((s,i)=>{
+  const b=document.createElement('button'); b.className='dot'+(i===0?' active':''); b.setAttribute('aria-label',`Ke slide ${i+1}`); b.onclick=()=>go(i); dots.appendChild(b);
+});
+function go(next){
+  next=Math.max(0,Math.min(slides.length-1,next));
+  if(next===index) return;
+  const old=slides[index], incoming=slides[next];
+  old.classList.remove('active'); old.classList.toggle('prev', next<index);
+  incoming.classList.remove('prev'); incoming.classList.add('active');
+  index=next;
+  [...dots.children].forEach((d,i)=>d.classList.toggle('active',i===index));
+  document.title=`${index+1}/${slides.length} · ${slides[index].dataset.title}`;
+}
+function next(){go(index+1)} function prev(){go(index-1)}
+document.getElementById('next').onclick=next; document.getElementById('prev').onclick=prev;
+window.addEventListener('keydown',e=>{
+  if(['ArrowRight','PageDown',' '].includes(e.key)){e.preventDefault();next()}
+  if(['ArrowLeft','PageUp'].includes(e.key)){e.preventDefault();prev()}
+  if(e.key.toLowerCase()==='f') document.documentElement.requestFullscreen?.();
+  if(e.key==='Home'){e.preventDefault();go(0)}
+  if(e.key==='End'){e.preventDefault();go(slides.length-1)}
+});
+// Click left/right side of slide for quick navigation.
+document.getElementById('deck').addEventListener('click',e=>{
+  if(e.target.closest('.nav,button,.node')) return;
+  const x=e.clientX/window.innerWidth;
+  if(x<.28) prev(); else if(x>.72) next();
+});
+// Swipe support on touch devices.
+let sx=0;
+document.addEventListener('touchstart',e=>{sx=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>60){dx<0?next():prev()}},{passive:true});
+// Interactive diagram.
+document.querySelectorAll('.node').forEach(node=>node.addEventListener('click',()=>{
+  document.querySelectorAll('.node').forEach(n=>n.classList.remove('active')); node.classList.add('active');
+  const title=node.querySelector('text')?.textContent || 'Komponen';
+  document.getElementById('infoTitle').textContent=title;
+  document.getElementById('infoText').textContent=node.dataset.info || '';
+}));
+// Start active diagram node.
+document.querySelector('.node')?.classList.add('active');
+</script>
+</body>
+</html>

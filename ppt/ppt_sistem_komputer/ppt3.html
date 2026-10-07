@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentasi Arsitektur Komputer - Kelompok 4</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            background: #0f0c29;
+        }
+
+        /* Gradient Backgrounds */
+        .bg-gradient-1 {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .bg-gradient-2 {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .bg-gradient-3 {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .bg-gradient-4 {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .bg-gradient-5 {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        }
+        .bg-gradient-6 {
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+        }
+        .bg-gradient-7 {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+        }
+
+        .presentation-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 60px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            transform: scale(0.95) translateY(20px);
+            z-index: 1;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: scale(1) translateY(0);
+            z-index: 10;
+        }
+
+        .slide-content {
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 30px;
+            padding: 50px 60px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
+            color: #fff;
+            max-height: 85vh;
+            overflow-y: auto;
+            transition: all 0.5s ease;
+        }
+
+        .slide-content::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide-content::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+        .slide-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            border-bottom: 3px solid rgba(255, 255, 255, 0.3);
+            padding-bottom: 15px;
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #fff;
+            opacity: 0.95;
+        }
+
+        p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            margin-bottom: 15px;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 10px;
+            padding-left: 30px;
+            position: relative;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        li::before {
+            content: "▸";
+            position: absolute;
+            left: 8px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: bold;
+        }
+
+        /* Cover Slide */
+        .cover-slide .slide-content {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .cover-logo {
+            width: 120px;
+            height: 120px;
+            margin: 0 auto 30px;
+            display: block;
+            filter: drop-shadow(0 8px 20px rgba(0, 0, 0, 0.3));
+        }
+
+        .cover-subtitle {
+            font-size: 1.3rem;
+            font-weight: 300;
+            opacity: 0.9;
+            margin-bottom: 15px;
+            letter-spacing: 2px;
+        }
+
+        .cover-title {
+            font-size: 3.2rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            line-height: 1.2;
+        }
+
+        .cover-divider {
+            width: 80px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.6);
+            margin: 25px auto;
+            border-radius: 2px;
+        }
+
+        .cover-members {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            max-width: 650px;
+            margin: 0 auto 30px;
+            text-align: left;
+        }
+
+        .cover-members .member {
+            font-size: 1rem;
+            font-weight: 400;
+            opacity: 0.95;
+            padding: 10px 18px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .cover-members .member:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .cover-members .member span {
+            display: block;
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-top: 2px;
+        }
+
+        .cover-footer {
+            font-size: 0.95rem;
+            opacity: 0.85;
+            margin-top: 10px;
+            font-weight: 300;
+            letter-spacing: 1px;
+        }
+
+        /* Content Grid */
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        .content-grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            align-items: start;
+        }
+
+        /* Image styling */
+        .slide-image {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: 16px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            transition: transform 0.3s ease;
+        }
+
+        .slide-image:hover {
+            transform: scale(1.02);
+        }
+
+        /* Abbreviation grid */
+        .abbr-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .abbr-item {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 12px 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .abbr-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(5px);
+        }
+
+        .abbr-item strong {
+            color: #fff;
+            font-weight: 700;
+            font-size: 0.95rem;
+        }
+
+        .abbr-item span {
+            display: block;
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 2px;
+            font-weight: 300;
+        }
+
+        /* Navigation */
+        .nav-controls {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 100;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            padding: 12px 28px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            outline: none;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .slide-counter {
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* Progress bar */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            transition: width 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+            z-index: 200;
+            border-radius: 0 2px 2px 0;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .slide.active .slide-content > * {
+            animation: fadeInUp 0.6s ease forwards;
+        }
+
+        .slide.active .slide-content > *:nth-child(1) { animation-delay: 0.1s; }
+        .slide.active .slide-content > *:nth-child(2) { animation-delay: 0.2s; }
+        .slide.active .slide-content > *:nth-child(3) { animation-delay: 0.3s; }
+        .slide.active .slide-content > *:nth-child(4) { animation-delay: 0.4s; }
+        .slide.active .slide-content > *:nth-child(5) { animation-delay: 0.5s; }
+        .slide.active .slide-content > *:nth-child(6) { animation-delay: 0.6s; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .slide-content {
+                padding: 35px 40px;
+            }
+            h1 { font-size: 2.8rem; }
+            h2 { font-size: 1.8rem; }
+            .cover-title { font-size: 2.5rem; }
+            .content-grid { grid-template-columns: 1fr; }
+            .content-grid-3 { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .slide {
+                padding: 20px 20px;
+            }
+            .slide-content {
+                padding: 25px 25px;
+                border-radius: 20px;
+            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            .cover-title { font-size: 1.8rem; }
+            .cover-members {
+                grid-template-columns: 1fr;
+            }
+            .abbr-grid {
+                grid-template-columns: 1fr;
+            }
+            .content-grid-3 {
+                grid-template-columns: 1fr;
+            }
+            .nav-controls {
+                bottom: 15px;
+                padding: 8px 18px;
+                gap: 12px;
+            }
+            .nav-btn {
+                width: 38px;
+                height: 38px;
+                font-size: 0.9rem;
+            }
+            .slide-counter {
+                font-size: 0.8rem;
+                min-width: 50px;
+            }
+        }
+
+        /* Icon styling */
+        .icon-large {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            opacity: 0.9;
+        }
+
+        /* Slide specific backgrounds */
+        .slide-bg-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .slide-bg-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .slide-bg-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .slide-bg-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .slide-bg-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .slide-bg-6 { background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%); }
+        .slide-bg-7 { background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%); }
+        .slide-bg-8 { background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%); }
+
+        /* Overlay for readability */
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.15);
+            z-index: 0;
+        }
+
+        .slide .slide-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Smooth scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Custom highlight */
+        .highlight {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-weight: 600;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #e0e0e0 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Progress Bar -->
+    <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+
+    <div class="presentation-container">
+
+        <!-- Slide 1: Cover -->
+        <div class="slide active slide-bg-1 cover-slide" data-slide="0">
+            <div class="slide-content">
+                <!-- Placeholder for logo - using Font Awesome icon as fallback -->
+                <div class="cover-logo" style="display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-microchip" style="font-size: 5rem; color: #fff; opacity: 0.9;"></i>
+                </div>
+                <div class="cover-subtitle">LAPORAN HASIL PRATIKUM 11</div>
+                <div class="cover-title">PENGANTAR SISTEM<br>KOMPUTER</div>
+                <div class="cover-divider"></div>
+                <h3 style="margin-bottom: 20px; font-weight: 600; font-size: 1.4rem;">KELOMPOK 4</h3>
+                <div class="cover-members">
+                    <div class="member">Iqbal Maulana <span>26.83.1253</span></div>
+                    <div class="member">Haydar Nur Fairuz S. <span>26.83.1258</span></div>
+                    <div class="member">Rajib Khan <span>26.83.1241</span></div>
+                    <div class="member">Ghussan Jafis <span>26.83.1263</span></div>
+                    <div class="member">Bayu Herlambang <span>26.83.1238</span></div>
+                </div>
+                <div class="cover-footer">
+                    PROGRAM STUDI TEKNIK KOMPUTER<br>
+                    FAKULTAS ILMU KOMPUTER<br>
+                    UNIVERSITAS AMIKOM YOGYAKARTA<br>
+                    2026
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Pendahuluan -->
+        <div class="slide slide-bg-2" data-slide="1">
+            <div class="slide-content">
+                <h2><i class="fas fa-book-open" style="margin-right: 12px;"></i>Pendahuluan</h2>
+                <div class="content-grid">
+                    <div>
+                        <p>Komputer telah menjadi bagian penting dalam berbagai bidang kehidupan, mulai dari pendidikan, bisnis hingga hiburan. Istilah <span class="highlight">komputer</span> (computer) diambil dari bahasa Latin <em>computare</em> yang berarti menghitung (<em>to compute</em> atau <em>to reckon</em>).</p>
+                        <p>Menurut <strong>Blissmer (1985)</strong>, komputer adalah suatu alat elektronik yang mampu melakukan beberapa tugas, yaitu menerima input, memproses input sesuai dengan instruksi yang diberikan, menyimpan perintah-perintah dan hasil pengolahannya serta menyediakan output dalam bentuk informasi.</p>
+                    </div>
+                    <div>
+                        <p>Pada dasarnya komputer bekerja dengan menerima data, mengolahnya, menyimpan hasilnya lalu menampilkannya sebagai informasi.</p>
+                        <p>Proses tersebut hanya dapat berjalan jika <strong>perangkat keras (Hardware)</strong>, <strong>perangkat lunak (Software)</strong> dan <strong>pengguna (Brainware)</strong> sebagai komponen yang saling terikat dan tidak bisa dipisahkan.</p>
+                        <p>Perangkat keras terdiri atas banyak komponen seperti CPU, memory, input dan output serta jalur komunikasi (bus) yang menghubungkannya, semua komponen ini terpasang dan terhubung melalui motherboard.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Tujuan -->
+        <div class="slide slide-bg-3" data-slide="2">
+            <div class="slide-content">
+                <h2><i class="fas fa-bullseye" style="margin-right: 12px;"></i>Tujuan Praktikum</h2>
+                <div class="content-grid">
+                    <div>
+                        <ul>
+                            <li>Mahasiswa dapat mengenali dan memahami bagian-bagian komputer</li>
+                            <li>Mahasiswa dapat membedakan mana perangkat input dan output</li>
+                            <li>Mahasiswa dapat mengenal Arsitektur Komputer</li>
+                            <li>Mahasiswa dapat memahami Arsitektur PC Modern</li>
+                        </ul>
+                    </div>
+                    <div style="display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-laptop-code" style="font-size: 8rem; opacity: 0.3; color: #fff;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Daftar Singkatan -->
+        <div class="slide slide-bg-4" data-slide="3">
+            <div class="slide-content">
+                <h2><i class="fas fa-list" style="margin-right: 12px;"></i>Daftar Singkatan Komponen</h2>
+                <div class="abbr-grid">
+                    <div class="abbr-item"><strong>GPU</strong> <span>Graphics Processing Unit</span></div>
+                    <div class="abbr-item"><strong>AGP</strong> <span>Accelerated Graphics Port</span></div>
+                    <div class="abbr-item"><strong>HDD</strong> <span>Hard Disk Drive</span></div>
+                    <div class="abbr-item"><strong>FDD</strong> <span>Floppy Disk Drive</span></div>
+                    <div class="abbr-item"><strong>FSB</strong> <span>Front Side Bus</span></div>
+                    <div class="abbr-item"><strong>USB</strong> <span>Universal Serial Bus</span></div>
+                    <div class="abbr-item"><strong>PCI</strong> <span>Peripheral Component Interconnect</span></div>
+                    <div class="abbr-item"><strong>RTC</strong> <span>Real-Time Clock</span></div>
+                    <div class="abbr-item"><strong>PATA</strong> <span>Parallel Advanced Technology Attachment</span></div>
+                    <div class="abbr-item"><strong>SATA</strong> <span>Serial Advanced Technology Attachment</span></div>
+                    <div class="abbr-item"><strong>ISA</strong> <span>Industry Standard Architecture</span></div>
+                    <div class="abbr-item"><strong>IDE</strong> <span>Integrated Drive Electronics</span></div>
+                    <div class="abbr-item"><strong>MCA</strong> <span>Micro Channel Architecture</span></div>
+                    <div class="abbr-item"><strong>PS/2</strong> <span>Personal System/2</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Gambar Arsitektur PC Modern -->
+        <div class="slide slide-bg-5" data-slide="4">
+            <div class="slide-content" style="text-align: center;">
+                <h2><i class="fas fa-project-diagram" style="margin-right: 12px;"></i>Arsitektur PC Modern</h2>
+                <!-- Placeholder for the architecture image -->
+                <div style="background: rgba(255,255,255,0.1); border-radius: 16px; padding: 30px; margin: 20px 0; border: 1px dashed rgba(255,255,255,0.3);">
+                    <i class="fas fa-sitemap" style="font-size: 6rem; opacity: 0.5; margin-bottom: 15px;"></i>
+                    <p style="font-size: 1.1rem; opacity: 0.8;">[Gambar Arsitektur PC Modern]</p>
+                    <p style="font-size: 0.9rem; opacity: 0.6;">Processor • GPU • Memory • Northbridge • Southbridge • PCI Bus • ISA Bus • dan komponen lainnya</p>
+                </div>
+                <p style="font-size: 1rem; opacity: 0.9;">Setiap komponen saling terhubung melalui jalur bus yang menghubungkan processor, memory, dan perangkat I/O.</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: Penjelasan Komponen Bagian 1 -->
+        <div class="slide slide-bg-6" data-slide="5">
+            <div class="slide-content">
+                <h2><i class="fas fa-microchip" style="margin-right: 12px;"></i>Penjelasan Komponen (1/2)</h2>
+                <div class="content-grid">
+                    <div>
+                        <ul>
+                            <li><strong>Processor:</strong> Komponen utama yang menjalankan instruksi dan mengolah data komputer.</li>
+                            <li><strong>Cache:</strong> Memori berkecepatan tinggi di dalam processor untuk mempercepat kerja prosesor.</li>
+                            <li><strong>GPU:</strong> Komponen yang mengolah dan menghasilkan tampilan grafis.</li>
+                            <li><strong>Monitor:</strong> Perangkat output untuk menampilkan visual dari GPU.</li>
+                            <li><strong>Memory:</strong> Tempat penyimpanan data sementara yang sedang digunakan komputer.</li>
+                            <li><strong>Memory Controller:</strong> Pengendali yang mengatur komunikasi antara memory dengan sistem.</li>
+                            <li><strong>AGP Controller:</strong> Pengendali untuk menghubungkan kartu grafis melalui slot AGP.</li>
+                            <li><strong>FSB/Front Side Bus:</strong> Jalur komunikasi utama yang menghubungkan Processor, AGP Controller, dan Memory Controller ke Northbridge.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul>
+                            <li><strong>Northbridge:</strong> Chipset yang mengatur komunikasi antara processor, memory, dan grafis.</li>
+                            <li><strong>Southbridge:</strong> Chipset yang mengatur komunikasi dengan perangkat I/O seperti USB, SATA, dan PCI.</li>
+                            <li><strong>Firewire Drive:</strong> Perangkat penyimpanan/periferal yang menggunakan antarmuka Firewire.</li>
+                            <li><strong>Firewire Controller:</strong> Pengendali komunikasi untuk perangkat Firewire.</li>
+                            <li><strong>USB Drive:</strong> Perangkat penyimpanan yang terhubung via USB.</li>
+                            <li><strong>USB Controller:</strong> Pengendali yang mengatur komunikasi perangkat USB dengan komputer.</li>
+                            <li><strong>Network Controller:</strong> Komponen yang mengatur koneksi jaringan komputer.</li>
+                            <li><strong>PCI Bus:</strong> Jalur komunikasi utama yang menghubungkan Southbridge dengan perangkat-perangkat PCI.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Penjelasan Komponen Bagian 2 -->
+        <div class="slide slide-bg-7" data-slide="6">
+            <div class="slide-content">
+                <h2><i class="fas fa-cogs" style="margin-right: 12px;"></i>Penjelasan Komponen (2/2)</h2>
+                <div class="content-grid">
+                    <div>
+                        <ul>
+                            <li><strong>Optical Drive:</strong> Perangkat untuk membaca atau menulis data pada CD atau DVD.</li>
+                            <li><strong>IDE Controller:</strong> Antarmuka untuk menghubungkan perangkat penyimpanan HDD/Optical.</li>
+                            <li><strong>PCI-ISA Bridge:</strong> Jembatan yang menghubungkan bus PCI dengan bus ISA.</li>
+                            <li><strong>Serial Port:</strong> Port untuk menghubungkan perangkat menggunakan komunikasi serial.</li>
+                            <li><strong>ISA Bus:</strong> Jalur komunikasi generasi lama untuk perangkat ekspansi ISA.</li>
+                            <li><strong>PATA/SATA:</strong> Standar koneksi untuk perangkat penyimpanan hard disk.</li>
+                            <li><strong>Parallel Port:</strong> Port yang mengirimkan beberapa bit data secara bersamaan.</li>
+                            <li><strong>RTC/Real-Time Clock:</strong> Komponen yang menjaga waktu dan tanggal komputer.</li>
+                            <li><strong>MCA Controller:</strong> Pengendali untuk perangkat dengan standar Micro Channel Architecture.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <ul>
+                            <li><strong>FDD/Floppy Disk Drive:</strong> Perangkat untuk membaca dan menulis data pada floppy disk.</li>
+                            <li><strong>SCSI Controller:</strong> Antarmuka untuk menghubungkan berbagai perangkat penyimpanan kecepatan tinggi.</li>
+                            <li><strong>HDD:</strong> Media penyimpanan data menggunakan piringan magnetik.</li>
+                            <li><strong>Tape/Backup Drive:</strong> Perangkat untuk backup data menggunakan pita magnetik.</li>
+                            <li><strong>Keyboard:</strong> Perangkat input untuk memasukkan huruf dan perintah.</li>
+                            <li><strong>MCA Bus:</strong> Jalur komunikasi yang digunakan oleh perangkat berbasis MCA.</li>
+                            <li><strong>Mouse:</strong> Perangkat input untuk menggerakkan kursor.</li>
+                            <li><strong>PS/2 Controller:</strong> Pengendali komunikasi untuk keyboard dan mouse PS/2.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Kesimpulan -->
+        <div class="slide slide-bg-8" data-slide="7">
+            <div class="slide-content" style="text-align: center;">
+                <h2 style="border-bottom: none; margin-bottom: 20px;"><i class="fas fa-check-circle" style="margin-right: 12px;"></i>Kesimpulan</h2>
+                <div style="max-width: 800px; margin: 0 auto;">
+                    <p style="font-size: 1.15rem; line-height: 2; margin-bottom: 25px;">
+                        Komputer adalah alat elektronik yang mampu melakukan beberapa tugas yaitu menerima input, memproses input sesuai dengan instruksi yang diberikan, menyimpan perintah-perintah dan hasil pengolahannya mengeluarkan output dalam bentuk informasi.
+                    </p>
+                    <div style="background: rgba(255,255,255,0.1); border-radius: 16px; padding: 25px; border: 1px solid rgba(255,255,255,0.15);">
+                        <p style="font-size: 1.1rem; line-height: 1.9; margin-bottom: 0;">
+                            Berdasarkan laporan yang telah kami buat, dapat disimpulkan bahwa <strong>arsitektur komputer</strong> merupakan susunan dan hubungan antara berbagai komponen komputer yang bekerja. Pada arsitektur PC modern setiap komponen memiliki peran dalam proses komunikasi dan pengolahan data mulai dari <strong>processor</strong> dan <strong>cache</strong> sebagai pusat pemrosesan, <strong>memory</strong> sebagai penyimpanan.
+                        </p>
+                    </div>
+                </div>
+                <div style="margin-top: 30px;">
+                    <i class="fas fa-graduation-cap" style="font-size: 3rem; opacity: 0.5;"></i>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="nav-controls">
+        <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" aria-label="Previous Slide">
+            <i class="fas fa-chevron-left"></i>
+        </button>
+        <div class="slide-counter" id="slideCounter">1 / 8</div>
+        <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)" aria-label="Next Slide">
+            <i class="fas fa-chevron-right"></i>
+        </button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const progressBar = document.getElementById('progressBar');
+        const slideCounter = document.getElementById('slideCounter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        // Initialize
+        updateSlide();
+
+        function updateSlide() {
+            // Update slides
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                }
+            });
+
+            // Update counter
+            slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+
+            // Update buttons
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide >= 0 && newSlide < totalSlides) {
+                currentSlide = newSlide;
+                updateSlide();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+                e.preventDefault();
+                if (currentSlide < totalSlides - 1) {
+                    changeSlide(1);
+                }
+            } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+                e.preventDefault();
+                if (currentSlide > 0) {
+                    changeSlide(-1);
+                }
+            } else if (e.key === 'Home') {
+                e.preventDefault();
+                currentSlide = 0;
+                updateSlide();
+            } else if (e.key === 'End') {
+                e.preventDefault();
+                currentSlide = totalSlides - 1;
+                updateSlide();
+            }
+        });
+
+        // Touch swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        }, { passive: true });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        }, { passive: true });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    // Swipe left -> next
+                    if (currentSlide < totalSlides - 1) {
+                        changeSlide(1);
+                    }
+                } else {
+                    // Swipe right -> prev
+                    if (currentSlide > 0) {
+                        changeSlide(-1);
+                    }
+                }
+            }
+        }
+
+        // Mouse wheel navigation (throttled)
+        let wheelTimeout;
+        document.addEventListener('wheel', (e) => {
+            if (wheelTimeout) return;
+            wheelTimeout = setTimeout(() => {
+                wheelTimeout = null;
+            }, 600);
+
+            if (e.deltaY > 0) {
+                if (currentSlide < totalSlides - 1) {
+                    changeSlide(1);
+                }
+            } else if (e.deltaY < 0) {
+                if (currentSlide > 0) {
+                    changeSlide(-1);
+                }
+            }
+        }, { passive: true });
+
+        // Prevent default scroll on slides
+        document.querySelectorAll('.slide-content').forEach(el => {
+            el.addEventListener('wheel', (e) => {
+                e.stopPropagation();
+            }, { passive: true });
+        });
+
+    </script>
+</body>
+</html>

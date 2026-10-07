@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentasi Arsitektur PC Modern - Kelompok 4</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Background Gradien Animasi */
+        .bg-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460, #533483);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Container Presentasi */
+        .presentation-container {
+            width: 90%;
+            max-width: 1200px;
+            height: 85vh;
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* Slide */
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 40px 60px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+            transform: translateX(100%) scale(0.9);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0) scale(1);
+        }
+
+        .slide.prev {
+            transform: translateX(-100%) scale(0.9);
+        }
+
+        /* Scrollbar Styling */
+        .slide::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #f7971e, #ffd200);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 30px rgba(247, 151, 30, 0.3);
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            color: #ffd200;
+            border-bottom: 2px solid rgba(255, 210, 0, 0.3);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #f7971e;
+            margin-bottom: 15px;
+        }
+
+        p, li {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: rgba(255, 255, 255, 0.85);
+            font-weight: 300;
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        ul li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        ul li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: #ffd200;
+            font-weight: bold;
+        }
+
+        /* Layout Grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 15px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .card i {
+            font-size: 1.8rem;
+            color: #ffd200;
+            margin-bottom: 10px;
+        }
+
+        .card h4 {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #fff;
+        }
+
+        .card p {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Singkatan List */
+        .abbr-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .abbr-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-left: 3px solid #f7971e;
+            font-size: 0.9rem;
+        }
+
+        .abbr-item strong {
+            color: #ffd200;
+        }
+
+        /* Gambar Arsitektur */
+        .img-container {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .img-container img {
+            max-width: 100%;
+            max-height: 350px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        /* Navigasi */
+        .navigation {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 15px;
+            z-index: 100;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .nav-btn:hover {
+            background: #ffd200;
+            color: #1a1a2e;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 210, 0, 0.5);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+        }
+
+        .slide-counter {
+            position: absolute;
+            bottom: 30px;
+            right: 40px;
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 300;
+            z-index: 100;
+        }
+
+        /* Progress Bar */
+        .progress-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(to right, #f7971e, #ffd200);
+            transition: width 0.5s ease;
+            z-index: 100;
+            border-radius: 0 2px 2px 0;
+        }
+
+        /* Animasi untuk konten slide */
+        .slide.active .animate-content {
+            animation: fadeInUp 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .slide.active .animate-content:nth-child(1) { animation-delay: 0.2s; }
+        .slide.active .animate-content:nth-child(2) { animation-delay: 0.4s; }
+        .slide.active .animate-content:nth-child(3) { animation-delay: 0.6s; }
+        .slide.active .animate-content:nth-child(4) { animation-delay: 0.8s; }
+        .slide.active .animate-content:nth-child(5) { animation-delay: 1.0s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .presentation-container {
+                width: 95%;
+                height: 90vh;
+            }
+            .slide {
+                padding: 25px 20px;
+            }
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            .grid-2, .grid-3, .abbr-grid {
+                grid-template-columns: 1fr;
+            }
+            .img-container img {
+                max-height: 200px;
+            }
+        }
+
+        /* Halaman Judul */
+        .title-slide {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .title-slide h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .title-slide .subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .title-slide .logo {
+            width: 120px;
+            height: 120px;
+            background: linear-gradient(135deg, #f7971e, #ffd200);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 30px;
+            font-size: 3rem;
+            color: #1a1a2e;
+            box-shadow: 0 0 40px rgba(247, 151, 30, 0.5);
+        }
+
+        .member-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .member-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 20px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.95rem;
+            backdrop-filter: blur(5px);
+        }
+
+        .member-item i {
+            margin-right: 8px;
+            color: #ffd200;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Background Animasi -->
+    <div class="bg-animated"></div>
+
+    <!-- Container Presentasi -->
+    <div class="presentation-container">
+        
+        <!-- Progress Bar -->
+        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+
+        <!-- Slide 1: Judul -->
+        <div class="slide active title-slide" id="slide-0">
+            <div class="logo">
+                <i class="fas fa-microchip"></i>
+            </div>
+            <h1 class="animate-content">LAPORAN HASIL PRATIKUM 11</h1>
+            <p class="subtitle animate-content">Pengantar Sistem Komputer</p>
+            <h2 class="animate-content" style="border: none; color: #fff; font-size: 2rem;">KELOMPOK 4</h2>
+            <div class="member-list animate-content">
+                <div class="member-item"><i class="fas fa-user"></i> Iqbal Maulana (26.83.1253)</div>
+                <div class="member-item"><i class="fas fa-user"></i> Haydar Nur Fairuz S. (26.83.1258)</div>
+                <div class="member-item"><i class="fas fa-user"></i> Rajib Khan (26.83.1241)</div>
+                <div class="member-item"><i class="fas fa-user"></i> Ghussan Jafis (26.83.1263)</div>
+                <div class="member-item"><i class="fas fa-user"></i> Bayu Herlambang (26.83.1238)</div>
+            </div>
+            <p class="animate-content" style="margin-top: 30px; font-size: 1rem; color: rgba(255,255,255,0.6);">
+                Program Studi Teknik Komputer<br>
+                Fakultas Ilmu Komputer - Universitas AMIKOM Yogyakarta<br>
+                2026
+            </p>
+        </div>
+
+        <!-- Slide 2: Pendahuluan -->
+        <div class="slide" id="slide-1">
+            <h2 class="animate-content">Pendahuluan</h2>
+            <div class="grid-2">
+                <div class="animate-content">
+                    <p style="margin-bottom: 15px;">
+                        Komputer telah menjadi bagian penting dalam berbagai bidang kehidupan, mulai dari pendidikan, bisnis hingga hiburan. Istilah <strong>komputer</strong> (computer) diambil dari bahasa Latin <em>computare</em> yang berarti menghitung.
+                    </p>
+                    <p style="margin-bottom: 15px;">
+                        Menurut <strong>Blissmer (1985)</strong>, komputer adalah suatu alat elektronik yang mampu melakukan beberapa tugas, yaitu menerima input, memproses input sesuai dengan instruksi yang diberikan, menyimpan perintah-perintah dan hasil pengolahannya serta menyediakan output dalam bentuk informasi.
+                    </p>
+                </div>
+                <div class="animate-content">
+                    <div class="card">
+                        <i class="fas fa-microchip"></i>
+                        <h4>Hardware</h4>
+                        <p>Perangkat keras fisik seperti CPU, memory, input/output, dan bus yang terhubung melalui motherboard.</p>
+                    </div>
+                    <div class="card" style="margin-top: 15px;">
+                        <i class="fas fa-code"></i>
+                        <h4>Software</h4>
+                        <p>Perangkat lunak yang menjalankan instruksi dan mengolah data.</p>
+                    </div>
+                    <div class="card" style="margin-top: 15px;">
+                        <i class="fas fa-user-gear"></i>
+                        <h4>Brainware</h4>
+                        <p>Pengguna yang mengoperasikan dan mengendalikan sistem komputer.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Daftar Singkatan -->
+        <div class="slide" id="slide-2">
+            <h2 class="animate-content">Daftar Singkatan Komponen</h2>
+            <p class="animate-content" style="margin-bottom: 20px;">Berikut adalah singkatan komponen sesuai gambar arsitektur PC:</p>
+            <div class="abbr-grid animate-content">
+                <div class="abbr-item"><strong>GPU</strong> = Graphics Processing Unit</div>
+                <div class="abbr-item"><strong>AGP</strong> = Accelerated Graphics Port</div>
+                <div class="abbr-item"><strong>HDD</strong> = Hard Disk Drive</div>
+                <div class="abbr-item"><strong>FDD</strong> = Floppy Disk Drive</div>
+                <div class="abbr-item"><strong>FSB</strong> = Front Side Bus</div>
+                <div class="abbr-item"><strong>USB</strong> = Universal Serial Bus</div>
+                <div class="abbr-item"><strong>PCI</strong> = Peripheral Component Interconnect</div>
+                <div class="abbr-item"><strong>RTC</strong> = Real-Time Clock</div>
+                <div class="abbr-item"><strong>PATA</strong> = Parallel Advanced Technology Attachment</div>
+                <div class="abbr-item"><strong>SATA</strong> = Serial Advanced Technology Attachment</div>
+                <div class="abbr-item"><strong>ISA</strong> = Industry Standard Architecture</div>
+                <div class="abbr-item"><strong>IDE</strong> = Integrated Drive Electronics</div>
+                <div class="abbr-item"><strong>MCA</strong> = Micro Channel</div>
+                <div class="abbr-item"><strong>PS/2</strong> = Personal System/2</div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Gambar Arsitektur PC Modern -->
+        <div class="slide" id="slide-3">
+            <h2 class="animate-content">Arsitektur PC Modern</h2>
+            <div class="img-container animate-content">
+                <!-- Placeholder untuk gambar arsitektur -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Motherboard_diagram.svg/1200px-Motherboard_diagram.svg.png" alt="Diagram Arsitektur PC Modern">
+                <p style="margin-top: 10px; font-size: 0.9rem; color: rgba(255,255,255,0.6);">Diagram blok arsitektur PC modern (Sumber: Ilustrasi)</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Penjelasan Komponen (1-9) -->
+        <div class="slide" id="slide-4">
+            <h2 class="animate-content">Penjelasan Komponen (1-9)</h2>
+            <div class="grid-2">
+                <div class="animate-content">
+                    <ul>
+                        <li><strong>Processor:</strong> Komponen utama yang menjalankan instruksi dan mengolah data.</li>
+                        <li><strong>Cache:</strong> Memori berkecepatan tinggi di dalam processor.</li>
+                        <li><strong>GPU:</strong> Mengolah dan menghasilkan tampilan grafis.</li>
+                        <li><strong>Monitor:</strong> Perangkat output visual dari GPU.</li>
+                        <li><strong>Memory:</strong> Tempat penyimpanan data sementara.</li>
+                    </ul>
+                </div>
+                <div class="animate-content">
+                    <ul>
+                        <li><strong>Memory Controller:</strong> Mengatur komunikasi antara memory dengan sistem.</li>
+                        <li><strong>AGP Controller:</strong> Menghubungkan kartu grafis melalui slot AGP.</li>
+                        <li><strong>FSB (Front Side Bus):</strong> Jalur komunikasi utama ke Northbridge.</li>
+                        <li><strong>Northbridge:</strong> Chipset yang mengatur komunikasi processor, memory, dan grafis.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Penjelasan Komponen (10-18) -->
+        <div class="slide" id="slide-5">
+            <h2 class="animate-content">Penjelasan Komponen (10-18)</h2>
+            <div class="grid-2">
+                <div class="animate-content">
+                    <ul>
+                        <li><strong>Southbridge:</strong> Mengatur komunikasi dengan perangkat I/O.</li>
+                        <li><strong>Firewire Drive:</strong> Perangkat penyimpanan via Firewire.</li>
+                        <li><strong>Firewire Controller:</strong> Pengendali komunikasi Firewire.</li>
+                        <li><strong>USB Drive:</strong> Perangkat penyimpanan via USB.</li>
+                        <li><strong>USB Controller:</strong> Mengatur komunikasi perangkat USB.</li>
+                    </ul>
+                </div>
+                <div class="animate-content">
+                    <ul>
+                        <li><strong>Network Controller:</strong> Mengatur koneksi jaringan komputer.</li>
+                        <li><strong>PCI Bus:</strong> Jalur komunikasi ke perangkat PCI.</li>
+                        <li><strong>Optical Drive:</strong> Membaca/menulis data pada CD/DVD.</li>
+                        <li><strong>IDE Controller:</strong> Antarmuka untuk HDD/Optical.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Penjelasan Komponen (19-28) -->
+        <div class="slide" id="slide-6">
+            <h2 class="animate-content">Penjelasan Komponen (19-28)</h2>
+            <div class="grid-2">
+                <div class="animate-content">
+                    <ul>
+                        <li><strong>PCI-ISA Bridge:</strong> Menghubungkan bus PCI dengan ISA.</li>
+                        <li><strong>Serial Port:</strong> Port komunikasi serial.</li>
+                        <li><strong>ISA Bus:</strong> Jalur komunikasi generasi lama.</li>
+                        <li><strong>PATA/SATA:</strong> Standar koneksi penyimpanan.</li>
+                        <li><strong>Parallel Port:</strong> Mengirimkan beberapa bit data sekaligus.</li>
+                    </ul>
+                </div>
+                <div class="animate-content">
+                    <ul>
+                        <li><strong>RTC (Real-Time Clock):</strong> Menjaga waktu dan tanggal komputer.</li>
+                        <li><strong>MCA Controller:</strong> Pengendali perangkat Micro Channel Architecture.</li>
+                        <li><strong>FDD (Floppy Disk Drive):</strong> Membaca/menulis floppy disk.</li>
+                        <li><strong>Optical Drive:</strong> Drive CD/DVD kedua.</li>
+                        <li><strong>SCSI Controller:</strong> Antarmuka perangkat penyimpanan kecepatan tinggi.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Penjelasan Komponen (29-36) -->
+        <div class="slide" id="slide-7">
+            <h2 class="animate-content">Penjelasan Komponen (29-36)</h2>
+            <div class="grid-2">
+                <div class="animate-content">
+                    <ul>
+                        <li><strong>HDD:</strong> Media penyimpanan magnetik (sisi kiri).</li>
+                        <li><strong>Tape/Backup Drive:</strong> Backup data pita magnetik (kiri).</li>
+                        <li><strong>HDD:</strong> Media penyimpanan magnetik (tengah).</li>
+                        <li><strong>Tape/Backup Drive:</strong> Backup data pita magnetik (tengah).</li>
+                    </ul>
+                </div>
+                <div class="animate-content">
+                    <ul>
+                        <li><strong>Keyboard:</strong> Perangkat input huruf dan perintah.</li>
+                        <li><strong>MCA Bus:</strong> Jalur komunikasi perangkat MCA.</li>
+                        <li><strong>Mouse:</strong> Perangkat input penggerak kursor.</li>
+                        <li><strong>PS/2 Controller:</strong> Pengendali keyboard dan mouse PS/2.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Kesimpulan -->
+        <div class="slide" id="slide-8">
+            <h2 class="animate-content">Kesimpulan</h2>
+            <div class="animate-content" style="display: flex; flex-direction: column; justify-content: center; height: 70%;">
+                <div class="card" style="padding: 30px; border-left: 5px solid #ffd200;">
+                    <i class="fas fa-lightbulb" style="font-size: 2.5rem; margin-bottom: 20px;"></i>
+                    <p style="font-size: 1.1rem; line-height: 1.8;">
+                        Komputer adalah alat elektronik yang mampu menerima input, memproses sesuai instruksi, menyimpan perintah dan hasil olahan, serta mengeluarkan output informasi.
+                    </p>
+                    <p style="font-size: 1.1rem; line-height: 1.8; margin-top: 15px;">
+                        Arsitektur komputer merupakan susunan dan hubungan antar komponen yang bekerja bersama. Pada PC modern, setiap komponen memiliki peran penting dalam komunikasi dan pengolahan data, mulai dari <strong>processor</strong> dan <strong>cache</strong> sebagai pusat pemrosesan, <strong>memory</strong> sebagai penyimpanan, hingga <strong>Northbridge</strong> dan <strong>Southbridge</strong> yang mengatur lalu lintas data.
+                    </p>
+                </div>
+                <p style="text-align: center; margin-top: 40px; font-size: 1.5rem; color: #ffd200; font-weight: 600;">
+                    Terima Kasih
+                </p>
+            </div>
+        </div>
+
+        <!-- Navigasi -->
+        <div class="navigation">
+            <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+
+        <!-- Slide Counter -->
+        <div class="slide-counter" id="slideCounter">
+            1 / 9
+        </div>
+
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const slideCounter = document.getElementById('slideCounter');
+        const progressBar = document.getElementById('progressBar');
+
+        // Inisialisasi
+        updateSlide();
+
+        function updateSlide() {
+            slides.forEach((slide, index) => {
+                slide.classList.remove('active', 'prev');
+                if (index === currentSlide) {
+                    slide.classList.add('active');
+                } else if (index < currentSlide) {
+                    slide.classList.add('prev');
+                }
+            });
+
+            // Update tombol navigasi
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === totalSlides - 1;
+
+            // Update counter
+            slideCounter.textContent = `${currentSlide + 1} / ${totalSlides}`;
+
+            // Update progress bar
+            const progress = ((currentSlide + 1) / totalSlides) * 100;
+            progressBar.style.width = progress + '%';
+        }
+
+        function changeSlide(direction) {
+            const newSlide = currentSlide + direction;
+            if (newSlide >= 0 && newSlide < totalSlides) {
+                currentSlide = newSlide;
+                updateSlide();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                e.preventDefault();
+                if (currentSlide < totalSlides - 1) changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                if (currentSlide > 0) changeSlide(-1);
+            }
+        });
+
+        // Touch swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+
+        document.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
+        document.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            if (touchEndX < touchStartX - swipeThreshold) {
+                // Swipe left -> next
+                if (currentSlide < totalSlides - 1) changeSlide(1);
+            } else if (touchEndX > touchStartX + swipeThreshold) {
+                // Swipe right -> prev
+                if (currentSlide > 0) changeSlide(-1);
+            }
+        }
+    </script>
+
+</body>
+</html>

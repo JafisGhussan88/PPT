@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Praktikum 11 - Pengantar Sistem Komputer | Kelompok 4</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    color: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ===== Animated Gradient Background ===== */
+  .bg {
+    position: fixed;
+    inset: 0;
+    z-index: -2;
+    background: linear-gradient(-45deg,
+      #1a1040, #2d1b69, #6b1d5c, #1e3a8a, #0c4a6e, #4c1d95);
+    background-size: 400% 400%;
+    animation: bgShift 22s ease infinite;
+  }
+  @keyframes bgShift {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+  }
+
+  .bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(167,139,250,.45), transparent 45%),
+      radial-gradient(circle at 85% 15%, rgba(244,114,182,.35), transparent 45%),
+      radial-gradient(circle at 70% 90%, rgba(56,189,248,.35), transparent 50%),
+      radial-gradient(circle at 20% 85%, rgba(251,146,60,.25), transparent 45%);
+    animation: pulseGlow 12s ease-in-out infinite alternate;
+  }
+  @keyframes pulseGlow {
+    from { opacity: .6; transform: scale(1); }
+    to   { opacity: 1;  transform: scale(1.08); }
+  }
+
+  /* Grain overlay for elegance */
+  .bg::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255,255,255,.06) 1px, transparent 1px);
+    background-size: 3px 3px;
+    opacity: .35;
+    mix-blend-mode: overlay;
+  }
+
+  /* ===== Presentation Container ===== */
+  .deck {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    padding: 56px 72px 96px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transform: translateX(80px) scale(.96);
+    filter: blur(6px);
+    transition:
+      opacity .75s cubic-bezier(.22,1,.36,1),
+      transform .75s cubic-bezier(.22,1,.36,1),
+      filter .75s cubic-bezier(.22,1,.36,1);
+    pointer-events: none;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,.3) transparent;
+  }
+  .slide::-webkit-scrollbar { width: 6px; }
+  .slide::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,.25);
+    border-radius: 99px;
+  }
+
+  .slide.active {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+    filter: blur(0);
+    pointer-events: auto;
+  }
+
+  .slide.prev { transform: translateX(-80px) scale(.96); }
+
+  /* ===== Typography ===== */
+  .overline {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.75);
+    margin-bottom: 18px;
+  }
+
+  .slide-title {
+    font-size: clamp(28px, 3.4vw, 48px);
+    font-weight: 800;
+    letter-spacing: -.5px;
+    line-height: 1.15;
+    margin-bottom: 36px;
+    text-align: center;
+    background: linear-gradient(120deg, #fff 20%, #e9d5ff 60%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .slide-title span {
+    background: linear-gradient(120deg, #f0abfc, #a78bfa, #60a5fa);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* ===== Title Slide ===== */
+  .title-slide {
+    text-align: center;
+    max-width: 950px;
+    padding: 0 20px;
+  }
+
+  .hex-logo {
+    width: 84px;
+    height: 84px;
+    margin: 0 auto 28px;
+    position: relative;
+    display: grid;
+    place-items: center;
+    animation: floatY 4s ease-in-out infinite;
+  }
+  @keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+  .hex-logo svg { width: 100%; height: 100%; filter: drop-shadow(0 10px 30px rgba(167,139,250,.6)); }
+
+  .main-title {
+    font-size: clamp(40px, 6vw, 84px);
+    font-weight: 800;
+    line-height: 1.02;
+    letter-spacing: -2.5px;
+    margin-bottom: 22px;
+    background: linear-gradient(120deg, #fff 0%, #f0abfc 45%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 80px rgba(167,139,250,.35);
+  }
+
+  .divider {
+    width: 80px;
+    height: 4px;
+    border-radius: 99px;
+    margin: 26px auto;
+    background: linear-gradient(90deg, transparent, #a78bfa, #f0abfc, #a78bfa, transparent);
+    box-shadow: 0 0 30px rgba(167,139,250,.8);
+  }
+
+  .subtitle {
+    font-size: clamp(16px, 1.6vw, 22px);
+    font-weight: 500;
+    color: rgba(255,255,255,.9);
+    margin-bottom: 10px;
+    letter-spacing: .5px;
+  }
+
+  .institute {
+    font-size: clamp(13px, 1.2vw, 16px);
+    font-weight: 400;
+    color: rgba(255,255,255,.6);
+    letter-spacing: 1px;
+  }
+
+  /* ===== Content Wrapper ===== */
+  .content {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  /* ===== Members Grid ===== */
+  .members {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 18px;
+    width: 100%;
+  }
+
+  .member {
+    padding: 22px 22px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    position: relative;
+    overflow: hidden;
+    transition: transform .35s cubic-bezier(.22,1,.36,1), background .35s;
+  }
+  .member:hover {
+    transform: translateY(-6px);
+    background: rgba(255,255,255,.12);
+  }
+  .member::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 20px;
+    padding: 1px;
+    background: linear-gradient(135deg, rgba(167,139,250,.6), rgba(244,114,182,.4), transparent 70%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+    opacity: .7;
+  }
+
+  .member .num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #c4b5fd;
+    display: block;
+    margin-bottom: 12px;
+  }
+  .member h3 {
+    font-size: 17px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 8px;
+    color: #fff;
+  }
+  .member p {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    color: rgba(255,255,255,.6);
+    letter-spacing: .5px;
+  }
+
+  /* ===== Body text ===== */
+  .lead {
+    font-size: clamp(15px, 1.4vw, 19px);
+    line-height: 1.85;
+    color: rgba(255,255,255,.88);
+    text-align: justify;
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+  .lead strong { color: #f0abfc; font-weight: 600; }
+
+  .glass-panel {
+    padding: 34px 40px;
+    border-radius: 24px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,.6);
+  }
+
+  /* ===== Abbreviation Grid ===== */
+  .abbr-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    width: 100%;
+  }
+  @media (max-width: 900px) { .abbr-grid { grid-template-columns: repeat(2, 1fr); } }
+
+  .abbr {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(10px);
+    transition: transform .3s, background .3s, border-color .3s;
+    cursor: default;
+  }
+  .abbr:hover {
+    transform: translateY(-3px) scale(1.02);
+    background: rgba(167,139,250,.18);
+    border-color: rgba(167,139,250,.5);
+  }
+  .abbr .code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: #f0abfc;
+    min-width: 52px;
+    letter-spacing: .5px;
+  }
+  .abbr .full {
+    font-size: 12px;
+    color: rgba(255,255,255,.8);
+    line-height: 1.35;
+  }
+
+  /* ===== Architecture Diagram ===== */
+  .arch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    max-width: 1050px;
+    margin: 0 auto;
+  }
+  .arch-row {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    flex-wrap: wrap;
+    width: 100%;
+  }
+  .arch-box {
+    padding: 12px 18px;
+    border-radius: 12px;
+    background: rgba(255,255,255,.09);
+    border: 1px solid rgba(255,255,255,.2);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    font-size: 12.5px;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #fff;
+    transition: transform .3s, box-shadow .3s;
+    min-width: 120px;
+  }
+  .arch-box:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px -10px rgba(167,139,250,.8);
+  }
+  .arch-box small {
+    display: block;
+    font-size: 10.5px;
+    font-weight: 400;
+    color: rgba(255,255,255,.6);
+    margin-top: 3px;
+  }
+  .arch-box.p { background: linear-gradient(135deg, rgba(167,139,250,.35), rgba(139,92,246,.2)); border-color: rgba(196,181,253,.5); }
+  .arch-box.b { background: linear-gradient(135deg, rgba(96,165,250,.35), rgba(59,130,246,.2)); border-color: rgba(147,197,253,.5); }
+  .arch-box.g { background: linear-gradient(135deg, rgba(52,211,153,.3), rgba(16,185,129,.2)); border-color: rgba(110,231,183,.5); }
+  .arch-box.c { background: linear-gradient(135deg, rgba(34,211,238,.35), rgba(6,182,212,.2)); border-color: rgba(103,232,249,.5); }
+  .arch-box.o { background: linear-gradient(135deg, rgba(251,146,60,.35), rgba(245,158,11,.2)); border-color: rgba(253,186,116,.5); }
+  .arch-box.pink { background: linear-gradient(135deg, rgba(244,114,182,.35), rgba(236,72,153,.2)); border-color: rgba(249,168,212,.5); }
+
+  .arch-line {
+    width: 2px;
+    height: 18px;
+    background: linear-gradient(180deg, rgba(255,255,255,.5), rgba(255,255,255,.15));
+  }
+  .arch-bus {
+    padding: 8px 30px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, rgba(167,139,250,.35), rgba(244,114,182,.35));
+    border: 1px solid rgba(255,255,255,.25);
+    font-size: 11.5px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #fff;
+    box-shadow: 0 0 30px rgba(167,139,250,.5);
+  }
+  .arch-wide {
+    min-width: 260px;
+    padding: 14px 26px;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+  .arch-chip {
+    padding: 9px 14px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 500;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.15);
+    color: rgba(255,255,255,.85);
+  }
+
+  /* ===== Component Cards ===== */
+  .comp-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    width: 100%;
+  }
+  @media (max-width: 900px) { .comp-grid { grid-template-columns: 1fr 1fr; } }
+
+  .comp {
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    transition: transform .3s, background .3s, border-color .3s;
+  }
+  .comp:hover {
+    transform: translateY(-4px);
+    background: rgba(167,139,250,.14);
+    border-color: rgba(167,139,250,.45);
+  }
+  .comp::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, #a78bfa, #f0abfc);
+    opacity: .7;
+  }
+  .comp .n {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    font-weight: 600;
+    color: #c4b5fd;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+    display: block;
+  }
+  .comp h4 {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 4px;
+    line-height: 1.25;
+  }
+  .comp p {
+    font-size: 11.5px;
+    line-height: 1.5;
+    color: rgba(255,255,255,.72);
+  }
+
+  /* Stagger animation for slide entrance */
+  .slide.active .anim {
+    animation: fadeUp .7s cubic-bezier(.22,1,.36,1) both;
+    animation-delay: calc(var(--i, 0) * 55ms + 150ms);
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== Conclusion ===== */
+  .conclusion {
+    max-width: 950px;
+    text-align: center;
+    font-size: clamp(15px, 1.45vw, 19px);
+    line-height: 1.9;
+    color: rgba(255,255,255,.9);
+  }
+  .conclusion strong { color: #f0abfc; }
+
+  /* ===== Thanks Slide ===== */
+  .thanks-title {
+    font-size: clamp(56px, 9vw, 130px);
+    font-weight: 800;
+    letter-spacing: -4px;
+    line-height: 1;
+    background: linear-gradient(120deg, #fff 0%, #f0abfc 50%, #a5b4fc 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: 0 0 100px rgba(167,139,250,.5);
+    animation: floatY 5s ease-in-out infinite;
+  }
+  .thanks-sub {
+    margin-top: 18px;
+    font-size: clamp(14px, 1.4vw, 18px);
+    color: rgba(255,255,255,.75);
+    letter-spacing: 1px;
+  }
+
+  /* ===== Navigation UI ===== */
+  .nav {
+    position: fixed;
+    bottom: 26px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px 14px;
+    border-radius: 99px;
+    background: rgba(20, 15, 50, .55);
+    border: 1px solid rgba(255,255,255,.14);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    z-index: 100;
+    box-shadow: 0 20px 60px -20px rgba(0,0,0,.7);
+  }
+
+  .nav-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,.18);
+    background: rgba(255,255,255,.06);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    cursor: pointer;
+    transition: all .25s;
+    font-size: 16px;
+  }
+  .nav-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #a78bfa, #f0abfc);
+    border-color: transparent;
+    transform: scale(1.08);
+    box-shadow: 0 0 24px rgba(167,139,250,.7);
+  }
+  .nav-btn:disabled { opacity: .35; cursor: not-allowed; }
+
+  .dots {
+    display: flex;
+    gap: 8px;
+    padding: 0 6px;
+  }
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,.25);
+    cursor: pointer;
+    transition: all .3s;
+    border: none;
+    padding: 0;
+  }
+  .dot:hover { background: rgba(255,255,255,.5); transform: scale(1.2); }
+  .dot.active {
+    width: 26px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #a78bfa, #f0abfc);
+    box-shadow: 0 0 16px rgba(167,139,250,.9);
+  }
+
+  .counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: rgba(255,255,255,.7);
+    min-width: 44px;
+    text-align: center;
+    letter-spacing: 1px;
+  }
+
+  .brand {
+    position: fixed;
+    top: 24px;
+    left: 32px;
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    color: rgba(255,255,255,.5);
+    text-transform: uppercase;
+    z-index: 100;
+  }
+  .brand strong { color: #f0abfc; }
+
+  @media (max-width: 700px) {
+    .slide { padding: 40px 22px 90px; }
+    .brand { left: 18px; top: 18px; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg"></div>
+<div class="brand">PRAKTIKUM 11 · <strong>KELOMPOK 4</strong></div>
+
+<div class="deck" id="deck">
+
+  <!-- ====== SLIDE 1 : TITLE ====== -->
+  <section class="slide active">
+    <div class="title-slide">
+      <div class="hex-logo">
+        <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M50 5 L89 27.5 L89 72.5 L50 95 L11 72.5 L11 27.5 Z" stroke="url(#g1)" stroke-width="3" fill="rgba(167,139,250,.15)"/>
+          <path d="M50 22 L74 36.5 L74 65.5 L50 80 L26 65.5 L26 36.5 Z" stroke="url(#g2)" stroke-width="2" fill="none"/>
+          <circle cx="50" cy="50" r="14" fill="url(#g2)" opacity=".9"/>
+          <defs>
+            <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#a78bfa"/>
+              <stop offset="100%" stop-color="#f0abfc"/>
+            </linearGradient>
+            <linearGradient id="g2" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#f0abfc"/>
+              <stop offset="100%" stop-color="#60a5fa"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <p class="overline">Laporan Hasil Praktikum 11</p>
+      <h1 class="main-title">Pengantar<br>Sistem Komputer</h1>
+      <div class="divider"></div>
+      <p class="subtitle">Kelompok 4 · Program Studi Teknik Komputer</p>
+      <p class="institute">Fakultas Ilmu Komputer · Universitas AMIKOM Yogyakarta · 2026</p>
+    </div>
+  </section>
+
+  <!-- ====== SLIDE 2 : MEMBERS ====== -->
+  <section class="slide">
+    <div class="content">
+      <h2 class="slide-title anim" style="--i:0">Anggota <span>Kelompok 4</span></h2>
+      <div class="members">
+        <div class="member anim" style="--i:1">
+          <span class="num">01</span>
+          <h3>Iqbal Maulana</h3>
+          <p>26.83.1253</p>
+        </div>
+        <div class="member anim" style="--i:2">
+          <span class="num">02</span>
+          <h3>Haydar Nur Fairuz Setiawan</h3>
+          <p>26.83.1258</p>
+        </div>
+        <div class="member anim" style="--i:3">
+          <span class="num">03</span>
+          <h3>Rajib Khan</h3>
+          <p>26.83.1241</p>
+        </div>
+        <div class="member anim" style="--i:4">
+          <span class="num">04</span>
+          <h3>Ghussan Jafis</h3>
+          <p>26.83.1263</p>
+        </div>
+        <div class="member anim" style="--i:5">
+          <span class="num">05</span>
+          <h3>Bayu Herlambang</h3>
+          <p>26.83.1238</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SLIDE 3 : PENDAHULUAN ====== -->
+  <section class="slide">
+    <div class="content">
+      <h2 class="slide-title anim" style="--i:0">Latar <span>Belakang</span></h2>
+      <div class="glass-panel anim" style="--i:1">
+        <p class="lead">
+          Komputer telah menjadi bagian penting dalam berbagai bidang kehidupan — mulai dari
+          pendidikan, bisnis, hingga hiburan. Istilah <strong>komputer</strong> diambil dari bahasa
+          Latin <em>computare</em> yang berarti menghitung. Menurut <strong>Blissmer (1985)</strong>,
+          komputer adalah suatu alat elektronik yang mampu menerima input, memproses input sesuai
+          instruksi, menyimpan perintah dan hasil pengolahannya, serta menyediakan output dalam
+          bentuk informasi.
+        </p>
+        <p class="lead" style="margin-top:22px">
+          Proses tersebut hanya dapat berjalan jika <strong>Hardware</strong>,
+          <strong>Software</strong>, dan <strong>Brainware</strong> saling terikat dan tidak bisa
+          dipisahkan. Karena itu, laporan ini disusun agar mahasiswa dapat mengenali bagian-bagian
+          komputer, membedakan perangkat input &amp; output, serta memahami arsitektur PC modern.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SLIDE 4 : SINGKATAN ====== -->
+  <section class="slide">
+    <div class="content">
+      <h2 class="slide-title anim" style="--i:0">Daftar <span>Singkatan</span> Komponen</h2>
+      <div class="abbr-grid">
+        <div class="abbr anim" style="--i:1"><span class="code">GPU</span><span class="full">Graphics Processing Unit</span></div>
+        <div class="abbr anim" style="--i:2"><span class="code">AGP</span><span class="full">Accelerated Graphics Port</span></div>
+        <div class="abbr anim" style="--i:3"><span class="code">HDD</span><span class="full">Hard Disk Drive</span></div>
+        <div class="abbr anim" style="--i:4"><span class="code">FDD</span><span class="full">Floppy Disk Drive</span></div>
+        <div class="abbr anim" style="--i:5"><span class="code">FSB</span><span class="full">Front Side Bus</span></div>
+        <div class="abbr anim" style="--i:6"><span class="code">USB</span><span class="full">Universal Serial Bus</span></div>
+        <div class="abbr anim" style="--i:7"><span class="code">PCI</span><span class="full">Peripheral Component Interconnect</span></div>
+        <div class="abbr anim" style="--i:8"><span class="code">RTC</span><span class="full">Real-Time Clock</span></div>
+        <div class="abbr anim" style="--i:9"><span class="code">PATA</span><span class="full">Parallel Advanced Technology Attachment</span></div>
+        <div class="abbr anim" style="--i:10"><span class="code">SATA</span><span class="full">Serial Advanced Technology Attachment</span></div>
+        <div class="abbr anim" style="--i:11"><span class="code">ISA</span><span class="full">Industry Standard Architecture</span></div>
+        <div class="abbr anim" style="--i:12"><span class="code">IDE</span><span class="full">Integrated Drive Electronics</span></div>
+        <div class="abbr anim" style="--i:13"><span class="code">MCA</span><span class="full">Micro Channel Architecture</span></div>
+        <div class="abbr anim" style="--i:14"><span class="code">PS/2</span><span class="full">Personal System/2</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SLIDE 5 : ARSITEKTUR DIAGRAM ====== -->
+  <section class="slide">
+    <div class="content">
+      <h2 class="slide-title anim" style="--i:0">Arsitektur <span>PC Modern</span></h2>
+      <div class="arch anim" style="--i:1">
+        <div class="arch-row">
+          <div class="arch-box p">Processor<small>Cache</small></div>
+          <div class="arch-box b">GPU<small>→ Monitor</small></div>
+          <div class="arch-box g">Memory<small>Memory Controller</small></div>
+        </div>
+        <div class="arch-line"></div>
+        <div class="arch-bus">FSB · Front Side Bus</div>
+        <div class="arch-line"></div>
+        <div class="arch-box c arch-wide">Northbridge</div>
+        <div class="arch-line"></div>
+        <div class="arch-box o arch-wide">Southbridge</div>
+        <div class="arch-line"></div>
+        <div class="arch-row">
+          <div class="arch-chip">USB / Firewire</div>
+          <div class="arch-chip">PCI Bus</div>
+          <div class="arch-chip">IDE · PATA / SATA</div>
+          <div class="arch-chip">Serial / Parallel</div>
+          <div class="arch-chip">PCI–ISA Bridge</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SLIDE 6 : KOMPONEN 1-9 ====== -->
+  <section class="slide">
+    <div class="content">
+      <h2 class="slide-title anim" style="--i:0">Inti Pemrosesan &amp; <span>Northbridge</span></h2>
+      <div class="comp-grid">
+        <div class="comp anim" style="--i:1"><span class="n">01</span><h4>Processor</h4><p>Komponen utama yang menjalankan instruksi dan mengolah data komputer.</p></div>
+        <div class="comp anim" style="--i:2"><span class="n">02</span><h4>Cache</h4><p>Memori berkecepatan tinggi di dalam processor untuk mempercepat kerja prosesor.</p></div>
+        <div class="comp anim" style="--i:3"><span class="n">03</span><h4>GPU</h4><p>Komponen yang mengolah dan menghasilkan tampilan grafis.</p></div>
+        <div class="comp anim" style="--i:4"><span class="n">04</span><h4>Monitor</h4><p>Perangkat output untuk menampilkan visual dari GPU.</p></div>
+        <div class="comp anim" style="--i:5"><span class="n">05</span><h4>Memory</h4><p>Tempat penyimpanan data sementara yang sedang digunakan komputer.</p></div>
+        <div class="comp anim" style="--i:6"><span class="n">06</span><h4>Memory Controller</h4><p>Pengendali yang mengatur komunikasi antara memory dengan sistem.</p></div>
+        <div class="comp anim" style="--i:7"><span class="n">07</span><h4>AGP Controller</h4><p>Pengendali untuk menghubungkan kartu grafis melalui slot AGP.</p></div>
+        <div class="comp anim" style="--i:8"><span class="n">08</span><h4>FSB</h4><p>Jalur komunikasi utama yang menghubungkan Processor, AGP Controller, dan Memory Controller ke Northbridge.</p></div>
+        <div class="comp anim" style="--i:9"><span class="n">09</span><h4>Northbridge</h4><p>Chipset yang mengatur komunikasi antara processor, memory, dan grafis.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SLIDE 7 : KOMPONEN 10-18 ====== -->
+  <section class="slide">
+    <div class="content">
+      <h2 class="slide-title anim" style="--i:0">Southbridge &amp; <span>Perangkat I/O</span></h2>
+      <div class="comp-grid">
+        <div class="comp anim" style="--i:1"><span class="n">10</span><h4>Southbridge</h4><p>Chipset yang mengatur komunikasi dengan perangkat I/O seperti USB, SATA, dan PCI.</p></div>
+        <div class="comp anim" style="--i:2"><span class="n">11</span><h4>Firewire Drive</h4><p>Perangkat penyimpanan/periferal yang menggunakan antarmuka Firewire.</p></div>
+        <div class="comp anim" style="--i:3"><span class="n">12</span><h4>Firewire Controller</h4><p>Pengendali komunikasi untuk perangkat Firewire.</p></div>
+        <div class="comp anim" style="--i:4"><span class="n">13</span><h4>USB Drive</h4><p>Perangkat penyimpanan yang terhubung via USB.</p></div>
+        <div class="comp anim" style="--i:5"><span class="n">14</span><h4>USB Controller</h4><p>Pengendali yang mengatur komunikasi perangkat USB dengan komputer.</p></div>
+        <div class="comp anim" style="--i:6"><span class="n">15</span><h4>Network Controller</h4><p>Komponen yang mengatur koneksi jaringan komputer.</p></div>
+        <div class="comp anim" style="--i:7"><span class="n">16</span><h4>PCI Bus</h4><p>Jalur komunikasi utama yang menghubungkan Southbridge dengan perangkat PCI.</p></div>
+        <div class="comp anim" style="--i:8"><span class="n">17</span><h4>Optical Drive</h4><p>Perangkat untuk membaca atau menulis data pada CD atau DVD.</p></div>
+        <div class="comp anim" style="--i:9"><span class="n">18</span><h4>IDE Controller</h4><p>Antarmuka untuk menghubungkan perangkat penyimpanan HDD/Optical.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SLIDE 8 : KOMPONEN 19-28 ====== -->
+  <section class="slide">
+    <div class="content">
+      <h2 class="slide-title anim" style="--i:0">Jembatan Bus &amp; <span>Standar Lama</span></h2>
+      <div class="comp-grid">
+        <div class="comp anim" style="--i:1"><span class="n">19</span><h4>PCI–ISA Bridge</h4><p>Jembatan yang menghubungkan bus PCI dengan bus ISA.</p></div>
+        <div class="comp anim" style="--i:2"><span class="n">20</span><h4>Serial Port</h4><p>Port untuk menghubungkan perangkat menggunakan komunikasi serial.</p></div>
+        <div class="comp anim" style="--i:3"><span class="n">21</span><h4>ISA Bus</h4><p>Jalur komunikasi generasi lama untuk perangkat ekspansi ISA.</p></div>
+        <div class="comp anim" style="--i:4"><span class="n">22</span><h4>PATA / SATA</h4><p>Standar koneksi untuk perangkat penyimpanan hard disk.</p></div>
+        <div class="comp anim" style="--i:5"><span class="n">23</span><h4>Parallel Port</h4><p>Port yang mengirimkan beberapa bit data secara bersamaan.</p></div>
+        <div class="comp anim" style="--i:6"><span class="n">24</span><h4>RTC</h4><p>Real-Time Clock — komponen yang menjaga waktu dan tanggal komputer.</p></div>
+        <div class="comp anim" style="--i:7"><span class="n">25</span><h4>MCA Controller</h4><p>Pengendali untuk perangkat dengan standar Micro Channel Architecture.</p></div>
+        <div class="comp anim" style="--i:8"><span class="n">26</span><h4>FDD</h4><p>Floppy Disk Drive — perangkat untuk membaca dan menulis data pada floppy disk.</p></div>
+        <div class="comp anim" style="--i:9"><span class="n">27</span><h4>Optical Drive</h4><p>Perangkat untuk membaca atau menulis data pada CD/DVD (drive kedua).</p></div>
+        <div class="comp anim" style="--i:10"><span class="n">28</span><h4>SCSI Controller</h4><p>Antarmuka untuk menghubungkan berbagai perangkat penyimpanan kecepatan tinggi.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SLIDE 9 : KOMPONEN 29-36 ====== -->
+  <section class="slide">
+    <div class="content">
+      <h2 class="slide-title anim" style="--i:0">Penyimpanan &amp; <span>Perangkat Input</span></h2>
+      <div class="comp-grid">
+        <div class="comp anim" style="--i:1"><span class="n">29</span><h4>HDD</h4><p>Media penyimpanan data menggunakan piringan magnetik (sisi kiri).</p></div>
+        <div class="comp anim" style="--i:2"><span class="n">30</span><h4>Tape/Backup Drive</h4><p>Perangkat untuk backup data menggunakan pita magnetik (sisi kiri).</p></div>
+        <div class="comp anim" style="--i:3"><span class="n">31</span><h4>HDD</h4><p>Media penyimpanan data menggunakan piringan magnetik (sisi tengah).</p></div>
+        <div class="comp anim" style="--i:4"><span class="n">32</span><h4>Tape/Backup Drive</h4><p>Perangkat untuk backup data menggunakan pita magnetik (sisi tengah).</p></div>
+        <div class="comp anim" style="--i:5"><span class="n">33</span><h4>Keyboard</h4><p>Perangkat input untuk memasukkan huruf dan perintah.</p></div>
+        <div class="comp anim" style="--i:6"><span class="n">34</span><h4>MCA Bus</h4><p>Jalur komunikasi yang digunakan oleh perangkat berbasis MCA.</p></div>
+        <div class="comp anim" style="--i:7"><span class="n">35</span><h4>Mouse</h4><p>Perangkat input untuk menggerakkan kursor.</p></div>
+        <div class="comp anim" style="--i:8"><span class="n">36</span><h4>PS/2 Controller</h4><p>Pengendali komunikasi untuk keyboard dan mouse PS/2.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SLIDE 10 : KESIMPULAN ====== -->
+  <section class="slide">
+    <div class="content">
+      <h2 class="slide-title anim" style="--i:0">Kesimpulan</h2>
+      <div class="glass-panel anim" style="--i:1">
+        <p class="conclusion">
+          Komputer adalah alat elektronik yang mampu menerima input, memproses input sesuai
+          instruksi, menyimpan perintah dan hasil pengolahannya, serta mengeluarkan output dalam
+          bentuk informasi.
+          <br><br>
+          Berdasarkan laporan yang telah kami buat, dapat disimpulkan bahwa
+          <strong>arsitektur komputer</strong> merupakan susunan dan hubungan antara berbagai
+          komponen yang saling bekerja sama. Pada arsitektur PC modern, setiap komponen memiliki
+          perannya masing-masing dalam proses komunikasi dan pengolahan data — mulai dari
+          <strong>processor</strong> dan <strong>cache</strong> sebagai pusat pemrosesan,
+          <strong>memory</strong> sebagai penyimpanan, hingga <strong>Northbridge</strong> dan
+          <strong>Southbridge</strong> yang menghubungkan seluruh subsistem.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SLIDE 11 : THANKS ====== -->
+  <section class="slide">
+    <div class="content" style="text-align:center">
+      <h1 class="thanks-title anim" style="--i:0">Terima Kasih</h1>
+      <p class="thanks-sub anim" style="--i:1">Kelompok 4 · Teknik Komputer · Universitas AMIKOM Yogyakarta</p>
+    </div>
+  </section>
+
+</div>
+
+<!-- ===== Navigation ===== -->
+<div class="nav">
+  <button class="nav-btn" id="prev" aria-label="Sebelumnya">‹</button>
+  <div class="dots" id="dots"></div>
+  <span class="counter" id="counter">1 / 11</span>
+  <button class="nav-btn" id="next" aria-label="Berikutnya">›</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const dotsWrap = document.getElementById('dots');
+  const counter = document.getElementById('counter');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+  let current = 0;
+  let locked = false;
+
+  // Build dots
+  slides.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'Slide ' + (i + 1));
+    d.addEventListener('click', () => go(i));
+    dotsWrap.appendChild(d);
+  });
+  const dots = dotsWrap.querySelectorAll('.dot');
+
+  function go(n) {
+    if (locked) return;
+    if (n < 0 || n >= slides.length || n === current) return;
+    locked = true;
+    const oldEl = slides[current];
+    const dir = n > current ? 1 : -1;
+
+    oldEl.classList.remove('active');
+    oldEl.classList.toggle('prev', dir === 1);
+    slides[n].classList.remove('prev');
+
+    // Force reflow to retrigger animations
+    void slides[n].offsetWidth;
+    slides[n].classList.add('active');
+
+    current = n;
+    updateUI();
+
+    setTimeout(() => { locked = false; }, 550);
+  }
+
+  function updateUI() {
+    dots.forEach((d, i) => d.classList.toggle('active', i === current));
+    counter.textContent = (current + 1) + ' / ' + slides.length;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === slides.length - 1;
+  }
+
+  prevBtn.addEventListener('click', () => go(current - 1));
+  nextBtn.addEventListener('click', () => go(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (['ArrowRight', 'ArrowDown', ' ', 'PageDown'].includes(e.key)) {
+      e.preventDefault(); go(current + 1);
+    } else if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(e.key)) {
+      e.preventDefault(); go(current - 1);
+    } else if (e.key === 'Home') { go(0); }
+    else if (e.key === 'End') { go(slides.length - 1); }
+  });
+
+  // Touch swipe
+  let touchStartX = 0, touchStartY = 0;
+  document.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+    touchStartY = e.changedTouches[0].screenY;
+  }, { passive: true });
+  document.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].screenX - touchStartX;
+    const dy = e.changedTouches[0].screenY - touchStartY;
+    if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy)) {
+      go(current + (dx < 0 ? 1 : -1));
+    }
+  }, { passive: true });
+
+  // Mouse wheel (throttled)
+  let wheelLock = false;
+  document.addEventListener('wheel', (e) => {
+    if (wheelLock) return;
+    if (Math.abs(e.deltaY) < 30) return;
+    wheelLock = true;
+    go(current + (e.deltaY > 0 ? 1 : -1));
+    setTimeout(() => { wheelLock = false; }, 900);
+  }, { passive: true });
+
+  updateUI();
+</script>
+
+</body>
+</html>
