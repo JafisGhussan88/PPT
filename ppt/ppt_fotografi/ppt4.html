@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentasi Fotografi Kelompok 9</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f5f7fa;
+            color: #1e293b;
+            overflow: hidden;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            user-select: none;
+        }
+
+        /* Container utama untuk slide */
+        .presentation-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: #f8fafc;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem 3rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.6s;
+            background: #f8fafc;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: #cbd5e1 #f1f5f9;
+        }
+
+        .slide.active {
+            opacity: 1;
+            visibility: visible;
+            z-index: 10;
+        }
+
+        /* Scrollbar styling */
+        .slide::-webkit-scrollbar {
+            width: 6px;
+        }
+        .slide::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .slide::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 8px;
+        }
+
+        /* Typography */
+        h1 {
+            font-size: 3.2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            letter-spacing: -0.01em;
+        }
+
+        h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .subhead {
+            font-size: 1.1rem;
+            color: #64748b;
+            text-align: center;
+            font-weight: 400;
+            max-width: 700px;
+            margin: 0 auto 1.5rem;
+            line-height: 1.5;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e2e8f0;
+            color: #334155;
+            padding: 0.3rem 0.9rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            margin-bottom: 1rem;
+        }
+
+        /* Card grid */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04), 0 1px 3px rgba(0, 0, 0, 0.02);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #e9eef2;
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #f1f5f9;
+            display: block;
+            transition: transform 0.5s;
+        }
+
+        .card:hover .card-img {
+            transform: scale(1.02);
+        }
+
+        .card-body {
+            padding: 1.25rem 1.5rem 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .card-body p {
+            font-size: 0.9rem;
+            color: #475569;
+            line-height: 1.6;
+            flex: 1;
+        }
+
+        .tag {
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #3b82f6;
+            background: #eff6ff;
+            padding: 0.2rem 0.7rem;
+            border-radius: 12px;
+            align-self: flex-start;
+        }
+
+        /* Cover slide */
+        .cover-logo {
+            width: 180px;
+            height: auto;
+            margin-bottom: 2rem;
+            filter: drop-shadow(0 10px 15px rgba(0, 0, 0, 0.1));
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .cover-title {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #0f172a;
+            text-align: center;
+            line-height: 1.2;
+            margin-bottom: 0.75rem;
+        }
+
+        .cover-sub {
+            font-size: 1.2rem;
+            color: #475569;
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 400;
+        }
+
+        .cover-members {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem 2rem;
+            background: white;
+            padding: 1.5rem 2.5rem;
+            border-radius: 60px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e9eef2;
+            max-width: 900px;
+        }
+
+        .cover-members span {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #1e293b;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .cover-members i {
+            color: #3b82f6;
+            font-size: 0.9rem;
+        }
+
+        .cover-institution {
+            margin-top: 2rem;
+            font-size: 0.95rem;
+            color: #64748b;
+            text-align: center;
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            line-height: 1.6;
+        }
+
+        /* Navigation */
+        .nav-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0.75rem 2rem;
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid #e9eef2;
+            z-index: 100;
+            min-height: 64px;
+        }
+
+        .nav-left, .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 40px;
+            padding: 0.6rem 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1e293b;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .nav-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .nav-btn:active {
+            transform: translateY(0);
+        }
+
+        .nav-btn i {
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .page-indicator {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #475569;
+            background: #f1f5f9;
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            min-width: 80px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+            transition: width 0.5s ease;
+            border-radius: 0 3px 3px 0;
+            z-index: 200;
+        }
+
+        /* Animation classes */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        .delay-5 { animation-delay: 0.5s; }
+
+        /* Slide specific */
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #3b82f6;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.25rem;
+            text-align: center;
+        }
+
+        .divider {
+            width: 60px;
+            height: 3px;
+            background: #3b82f6;
+            border-radius: 3px;
+            margin: 0.75rem auto 1.5rem;
+            opacity: 0.6;
+        }
+
+        /* Image placeholder for missing images (just in case) */
+        .img-fallback {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #eef2f6;
+            color: #94a3b8;
+            font-size: 0.8rem;
+            font-weight: 500;
+            height: 100%;
+            min-height: 180px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            h1 { font-size: 2.5rem; }
+            .grid-2 { gap: 1.5rem; }
+            .grid-3 { gap: 1rem; }
+            .slide { padding: 1.5rem; }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            h2 { font-size: 1.5rem; }
+            .cover-title { font-size: 2.2rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .grid-3 { grid-template-columns: 1fr; }
+            .cover-members { padding: 1rem 1.5rem; flex-direction: column; align-items: center; gap: 0.5rem; border-radius: 24px; }
+            .nav-bar { padding: 0.5rem 1rem; }
+            .nav-btn span { display: none; }
+            .nav-btn { padding: 0.6rem 1rem; }
+            .slide { padding: 1rem; }
+            .card-img { height: 160px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="presentation-container" id="presentation">
+        <!-- Progress bar -->
+        <div class="progress-bar" id="progressBar" style="width: 0%;"></div>
+
+        <!-- ==================== SLIDE 1: COVER ==================== -->
+        <div class="slide active" id="slide1">
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; max-width: 1000px; padding: 1rem;">
+                <!-- Logo -->
+                <img src="https://i.imgur.com/8QZ8Z8Q.png" alt="Logo Amikom" class="cover-logo" style="width: 150px; height: auto;">
+                
+                <div class="badge fade-up delay-1">TUGAS 1</div>
+                <h1 class="cover-title fade-up delay-2">Laporan Fotografi<br>Kelompok 9</h1>
+                <p class="cover-sub fade-up delay-3">Dosen Pengampu: Senia Destya, S.T., M.Kom.</p>
+                
+                <div class="cover-members fade-up delay-4">
+                    <span><i class="fas fa-user"></i> Fauzia Rizqi Ramadhani (26.83.1252)</span>
+                    <span><i class="fas fa-user"></i> Ghussan Jafis (26.83.1263)</span>
+                    <span><i class="fas fa-user"></i> Yohanes Fontain Putra Lahu (26.83.1269)</span>
+                    <span><i class="fas fa-user"></i> Dhanda Hendrawan Alisaputra (26.83.1266)</span>
+                </div>
+                
+                <div class="cover-institution fade-up delay-5">
+                    <strong>PROGRAM STUDI TEKNIK KOMPUTER</strong><br>
+                    FAKULTAS ILMU KOMPUTER<br>
+                    UNIVERSITAS AMIKOM YOGYAKARTA<br>
+                    YOGYAKARTA 2026
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 2: OBJEK MANUSIA A-B ==================== -->
+        <div class="slide" id="slide2">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Manusia</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Extreme Close Up & Big Close Up</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- A. Extreme Close Up -->
+                    <div class="card fade-up delay-2">
+                        <div style="height: 240px; background: #eef2f6; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.9rem; font-weight: 500;">Foto Extreme Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">A. Extreme Close Up</span>
+                            <p>Foto tersebut menunjukkan detail yang sangat dekat pada bagian tangan yang sedang memegang pinset dengan teknik ECU.</p>
+                        </div>
+                    </div>
+                    <!-- B. Big Close Up -->
+                    <div class="card fade-up delay-3">
+                        <div style="height: 240px; background: #eef2f6; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.9rem; font-weight: 500;">Foto Big Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">B. Big Close Up</span>
+                            <p>Foto tersebut menunjukkan fokus pada detail tangan dengan batas pergelangan tangan yang sedang memegang gantungan kunci dari AMIKOM COMPUTER CLUB 2021 yang didapat pada PPM 2026 dengan Teknik BCU.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 3: OBJEK MANUSIA C-D ==================== -->
+        <div class="slide" id="slide3">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Manusia</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Close Up & Medium Close Up</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- C. Close Up -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/5X5X5X5.jpg" alt="Close Up Tangan Memegang Kunci" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">C. Close Up</span>
+                            <p>Foto tersebut menunjukkan detail tangan yang sedang memegang kunci pintu rumah dengan jarak dekat yang menjadikan kunci pintu rumah menjadi sebuah objek utama sangat menonjol dengan latar belakang yang tampak sedikit.</p>
+                        </div>
+                    </div>
+                    <!-- D. Medium Close Up -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/6X6X6X6.jpg" alt="Medium Close Up Pria" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Medium Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">D. Medium Close Up</span>
+                            <p>Foto tersebut menampilkan seseorang dari bagian dada ke atas dengan ekspresi wajah yang jelas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 4: OBJEK MANUSIA E-F ==================== -->
+        <div class="slide" id="slide4">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Manusia</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Head Shot & Medium Shot</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- E. Head Shot -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/7X7X7X7.jpg" alt="Head Shot Pria" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Head Shot</div>
+                        <div class="card-body">
+                            <span class="tag">E. Head Shot</span>
+                            <p>Foto tersebut menampilkan detail yang berfokus pada ekspresi dan bentuk wajah orang tersebut.</p>
+                        </div>
+                    </div>
+                    <!-- F. Medium Shot -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/8X8X8X8.jpg" alt="Medium Shot Pria Bersandar" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Medium Shot</div>
+                        <div class="card-body">
+                            <span class="tag">F. Medium Shot</span>
+                            <p>Foto tersebut menampilkan bagian pinggang ke atas seseorang dengan jarak sedang yang sedang bersandar santai dengan latar sebuah monument.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 5: OBJEK MANUSIA G-H ==================== -->
+        <div class="slide" id="slide5">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Manusia</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Mid Shot & Knee Shot</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- G. Mid Shot -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/9X9X9X9.jpg" alt="Mid Shot Pria" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Mid Shot</div>
+                        <div class="card-body">
+                            <span class="tag">G. Mid Shot</span>
+                            <p>Foto tersebut menampilkan separuh badan seseorang dengan latar peninggalan yang bersejarah dan ada beberapa lukisan di belakangnya.</p>
+                        </div>
+                    </div>
+                    <!-- H. Knee Shot -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/0Y0Y0Y0.jpg" alt="Knee Shot Pria Duduk" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Knee Shot</div>
+                        <div class="card-body">
+                            <span class="tag">H. Knee Shot</span>
+                            <p>Foto tersebut menunjukkan seseorang yang sedang duduk santai yang memperlihatkan badan hanya sampai lutut.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 6: OBJEK MANUSIA I-J ==================== -->
+        <div class="slide" id="slide6">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Manusia</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Long Shot & Extreme Long Shot</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- I. Long Shot -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/1Z1Z1Z1.jpg" alt="Long Shot Pria Depan Tank" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Long Shot</div>
+                        <div class="card-body">
+                            <span class="tag">I. Long Shot</span>
+                            <p>Foto tersebut adalah foto seseorang yang menampilkan seluruh tubuh secara utuh yang didominasi oleh latar belakang yang luas.</p>
+                        </div>
+                    </div>
+                    <!-- J. Extreme Long Shot -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/2Z2Z2Z2.jpg" alt="Extreme Long Shot Pria Depan Monumen" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Extreme Long Shot</div>
+                        <div class="card-body">
+                            <span class="tag">J. Extreme Long Shot</span>
+                            <p>Foto tersebut menunjukkan sesorang dari jarak jauh dan luas untuk memperkenalkan latar monument di belakangnya.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 7: OBJEK BANGUNAN A-B ==================== -->
+        <div class="slide" id="slide7">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Bangunan</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Extreme Close Up & Big Close Up</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- A. Extreme Close Up -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/3Z3Z3Z3.jpg" alt="Plat Nomor" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Extreme Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">A. Extreme Close Up</span>
+                            <p>Foto tersebut menampilkan detail plat nomor pada mobil bersejarah yang diambil dengan jarak sangat dekat.</p>
+                        </div>
+                    </div>
+                    <!-- B. Big Close Up -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/4Z4Z4Z4.jpg" alt="Bagian Belakang Mobil Bersejarah" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Big Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">B. Big Close Up</span>
+                            <p>Foto tersebut menunjukkan detail mobil bersejarah bagian belakang dengan tekstur yang jelas dan dengan jarak dekat.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 8: OBJEK BANGUNAN C-D ==================== -->
+        <div class="slide" id="slide8">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Bangunan</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Close Up & Medium Close Up</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- C. Close Up -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/5Z5Z5Z5.jpg" alt="Ban Mobil Bersejarah" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">C. Close Up</span>
+                            <p>Foto tersebut menampilkan ban dari mobil paling bersejarah dengan tekstur yang jelas dan latar yang sedikit.</p>
+                        </div>
+                    </div>
+                    <!-- D. Medium Close Up -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/6Z6Z6Z6.jpg" alt="Lukisan di Museum" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Medium Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">D. Medium Close Up</span>
+                            <p>Foto tersebut menunjukkan detail lukisan yang terpampang di museum dengan jarak dekat yang menjadikan sebuah lukisan menjadi objek utama yang sangat menonjol dengan latar belakang yang tampak sedikit.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 9: OBJEK BANGUNAN E-F ==================== -->
+        <div class="slide" id="slide9">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Bangunan</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Head Shot & Medium Shot</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- E. Head Shot -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/7Z7Z7Z7.jpg" alt="Atap Bangunan" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Head Shot</div>
+                        <div class="card-body">
+                            <span class="tag">E. Head Shot</span>
+                            <p>Foto tersebut menampilkan detail yang berfokus pada sudut bangunan dan tekstur bangunan tersebut.</p>
+                        </div>
+                    </div>
+                    <!-- F. Medium Shot -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/8Z8Z8Z8.jpg" alt="Tank Bersejarah" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Medium Shot</div>
+                        <div class="card-body">
+                            <span class="tag">F. Medium Shot</span>
+                            <p>Foto tersebut menampilkan bagian depan tank bersejarah dari sudut depan ke atas dengan jarak sedang.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 10: OBJEK BANGUNAN G-H ==================== -->
+        <div class="slide" id="slide10">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Bangunan</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Mid Shot & Knee Shot</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- G. Mid Shot -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/9Z9Z9Z9.jpg" alt="Kendaraan Perang" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Mid Shot</div>
+                        <div class="card-body">
+                            <span class="tag">G. Mid Shot</span>
+                            <p>Foto tersebut menunjukkan kendaraan perang yang diambil dengan jarak lebih dekat sehingga memperlihatkan badan hanya sampai lutut kendaraan.</p>
+                        </div>
+                    </div>
+                    <!-- H. Knee Shot -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/0W0W0W0.jpg" alt="Patung Pahlawan" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Knee Shot</div>
+                        <div class="card-body">
+                            <span class="tag">H. Knee Shot</span>
+                            <p>Foto tersebut menunjukkan patung yang sedang berdiri yang memperlihatkan badan hanya sampai lutut.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 11: OBJEK BANGUNAN I-J ==================== -->
+        <div class="slide" id="slide11">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Bangunan</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Long Shot & Extreme Long Shot</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- I. Long Shot -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/1V1V1V1.jpg" alt="Bangunan Museum" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Long Shot</div>
+                        <div class="card-body">
+                            <span class="tag">I. Long Shot</span>
+                            <p>Foto tersebut adalah foto bangunan museum yang menampilkan seluruh bangunan secara utuh yang didominasi oleh latar belakang yang luas.</p>
+                        </div>
+                    </div>
+                    <!-- J. Extreme Long Shot -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/2V2V2V2.jpg" alt="Koleksi Mobil Bersejarah" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Extreme Long Shot</div>
+                        <div class="card-body">
+                            <span class="tag">J. Extreme Long Shot</span>
+                            <p>Foto tersebut menunjukkan salah satu koleksi mobil bersejarah dari jarak yang sangat jauh dan luas untuk memperkenalkan seluruh latar di belakangnya.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 12: OBJEK ALAM A-B ==================== -->
+        <div class="slide" id="slide12">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Alam</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Extreme Close Up & Big Close Up</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- A. Extreme Close Up -->
+                    <div class="card fade-up delay-2">
+                        <div style="height: 240px; background: #eef2f6; display: flex; align-items: center; justify-content: center; color: #94a3b8; font-size: 0.9rem; font-weight: 500;">Foto Extreme Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">A. Extreme Close Up</span>
+                            <p>Foto tersebut menampilkan detail bunga pada bunga langka yang diambil dengan jarak sangat dekat.</p>
+                        </div>
+                    </div>
+                    <!-- B. Big Close Up -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/3V3V3V3.jpg" alt="Bunga Pink" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Big Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">B. Big Close Up</span>
+                            <p>Foto tersebut menampilkan detail bunga pada bunga langka yang diambil dengan jarak sangat dekat.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 13: OBJEK ALAM C ==================== -->
+        <div class="slide" id="slide13">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Alam</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Close Up</h2>
+                <div class="grid-2" style="margin-top: 1rem; grid-template-columns: 1fr 1fr;">
+                    <div class="card fade-up delay-2" style="grid-column: span 2; max-width: 700px; margin: 0 auto;">
+                        <img src="https://i.imgur.com/4V4V4V4.jpg" alt="Bunga Pink Close Up" class="card-img" style="height: 280px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 280px;">Foto Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">C. Close Up</span>
+                            <p>Foto tersebut menampilkan bunga yang terhubung dengan tangkainya dengan jarak dekat, tekstur yang jelas dan latar yang sedikit.</p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Deskripsi tambahan yang ada di halaman 13 -->
+                <div style="margin-top: 1rem; text-align: center; font-size: 0.9rem; color: #64748b;">
+                    <p><em>Deskripsi: Foto tersebut menunjukkan setengah dari detail tumbuhan dengan tekstur yang jelas dan dengan jarak dekat.</em></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 14: OBJEK ALAM D-E ==================== -->
+        <div class="slide" id="slide14">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Alam</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Medium Close Up & Head Shot</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- D. Medium Close Up -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/5V5V5V5.jpg" alt="Tanaman Palem" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Medium Close Up</div>
+                        <div class="card-body">
+                            <span class="tag">D. Medium Close Up</span>
+                            <p>Foto tersebut menunjukkan detail tumbuhan dengan jarak dekat yang menjadikan tumbuhan tersebut menjadi objek utama yang sangat menonjol dengan latar belakang yang tampak sedikit.</p>
+                        </div>
+                    </div>
+                    <!-- E. Head Shot -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/6V6V6V6.jpg" alt="Tanaman Hijau" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Head Shot</div>
+                        <div class="card-body">
+                            <span class="tag">E. Head Shot</span>
+                            <p>Foto tersebut menampilkan detail yang berfokus pada bagian tengah tumbuhan dan tekstur tumbuhan tersebut.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 15: OBJEK ALAM F ==================== -->
+        <div class="slide" id="slide15">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Alam</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Medium Shot</h2>
+                <div class="grid-2" style="margin-top: 1rem; grid-template-columns: 1fr 1fr;">
+                    <div class="card fade-up delay-2" style="grid-column: span 2; max-width: 700px; margin: 0 auto;">
+                        <img src="https://i.imgur.com/7V7V7V7.jpg" alt="Tanaman Palem dalam Pot" class="card-img" style="height: 280px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 280px;">Foto Medium Shot</div>
+                        <div class="card-body">
+                            <span class="tag">F. Medium Shot</span>
+                            <p>Foto tersebut menampilkan bagian tengah tumbuhan dari sudut depan ke atas dengan jarak sedang.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 16: OBJEK ALAM G-H ==================== -->
+        <div class="slide" id="slide16">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Alam</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Mid Shot & Knee Shot</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- G. Mid Shot -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/8V8V8V8.jpg" alt="Tanaman Lidah Buaya" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Mid Shot</div>
+                        <div class="card-body">
+                            <span class="tag">G. Mid Shot</span>
+                            <p>Foto tersebut menunjukkan tumbuhan yang diambil dengan jarak lebih dekat sehingga memperlihatkan pot hanya sampai lutut pot.</p>
+                        </div>
+                    </div>
+                    <!-- H. Knee Shot -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/9V9V9V9.jpg" alt="Tanaman Hijau Rimbun" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Knee Shot</div>
+                        <div class="card-body">
+                            <span class="tag">H. Knee Shot</span>
+                            <p>Foto tersebut menunjukkan tumbuhan yang sedang melakukan fotosintesis yang memperlihatkan badan hanya sampai lutut tumbuhan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ==================== SLIDE 17: OBJEK ALAM I-J ==================== -->
+        <div class="slide" id="slide17">
+            <div style="width: 100%; max-width: 1200px;">
+                <div class="section-title fade-up">Objek Alam</div>
+                <div class="divider"></div>
+                <h2 class="fade-up delay-1">Long Shot & Extreme Long Shot</h2>
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <!-- I. Long Shot -->
+                    <div class="card fade-up delay-2">
+                        <img src="https://i.imgur.com/1U1U1U1.jpg" alt="Tanaman Pandan" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Long Shot</div>
+                        <div class="card-body">
+                            <span class="tag">I. Long Shot</span>
+                            <p>Foto tersebut adalah foto tumbuhan yang menampilkan seluruh tumbuhan secara utuh yang didominasi oleh latar belakang yang luas.</p>
+                        </div>
+                    </div>
+                    <!-- J. Extreme Long Shot -->
+                    <div class="card fade-up delay-3">
+                        <img src="https://i.imgur.com/2U2U2U2.jpg" alt="Pohon Besar di Lapangan" class="card-img" style="height: 240px; object-fit: cover;" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="img-fallback" style="display: none; height: 240px;">Foto Extreme Long Shot</div>
+                        <div class="card-body">
+                            <span class="tag">J. Extreme Long Shot</span>
+                            <p>Foto tersebut menunjukkan salah satu tumbuhan dari jarak yang sangat jauh dan luas untuk memperkenalkan seluruh latar di belakangnya.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="nav-left">
+            <button class="nav-btn" id="prevBtn" title="Sebelumnya">
+                <i class="fas fa-chevron-left"></i>
+                <span>Sebelumnya</span>
+            </button>
+        </div>
+        <div class="nav-right">
+            <span class="page-indicator" id="pageIndicator">1 / 17</span>
+            <button class="nav-btn" id="nextBtn" title="Selanjutnya">
+                <span>Selanjutnya</span>
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            const slides = document.querySelectorAll('.slide');
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const pageIndicator = document.getElementById('pageIndicator');
+            const progressBar = document.getElementById('progressBar');
+            let currentSlide = 0;
+            const totalSlides = slides.length;
+
+            function updateSlide(index) {
+                // Validasi index
+                if (index < 0) index = 0;
+                if (index >= totalSlides) index = totalSlides - 1;
+
+                // Remove active class from all slides
+                slides.forEach(slide => slide.classList.remove('active'));
+                // Add active class to current slide
+                slides[index].classList.add('active');
+
+                // Update indicator
+                pageIndicator.textContent = `${index + 1} / ${totalSlides}`;
+
+                // Update progress bar
+                const progress = ((index + 1) / totalSlides) * 100;
+                progressBar.style.width = progress + '%';
+
+                // Scroll to top of slide content
+                slides[index].scrollTop = 0;
+
+                // Update button states (optional)
+                prevBtn.style.opacity = index === 0 ? '0.5' : '1';
+                prevBtn.style.pointerEvents = index === 0 ? 'none' : 'auto';
+                nextBtn.style.opacity = index === totalSlides - 1 ? '0.5' : '1';
+                nextBtn.style.pointerEvents = index === totalSlides - 1 ? 'none' : 'auto';
+
+                currentSlide = index;
+            }
+
+            // Event listeners
+            prevBtn.addEventListener('click', () => {
+                updateSlide(currentSlide - 1);
+            });
+
+            nextBtn.addEventListener('click', () => {
+                updateSlide(currentSlide + 1);
+            });
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    if (e.key === 'ArrowLeft') {
+                        updateSlide(currentSlide - 1);
+                    } else {
+                        updateSlide(currentSlide + 1);
+                    }
+                }
+            });
+
+            // Touch swipe support
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            document.addEventListener('touchstart', (e) => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, { passive: true });
+
+            document.addEventListener('touchend', (e) => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, { passive: true });
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                const diff = touchStartX - touchEndX;
+
+                if (Math.abs(diff) > swipeThreshold) {
+                    if (diff > 0) {
+                        // Swipe left -> next
+                        updateSlide(currentSlide + 1);
+                    } else {
+                        // Swipe right -> prev
+                        updateSlide(currentSlide - 1);
+                    }
+                }
+            }
+
+            // Initialize
+            updateSlide(0);
+
+            // Re-trigger animations when slide changes (for cards)
+            // Actually, we use CSS animation on .fade-up, but they only run once.
+            // To re-run, we can remove and re-add class, but for simplicity, we rely on the initial run.
+            // Since each slide is separate, animations will run when the slide becomes active (if we re-trigger).
+            // Let's add a small observer to re-trigger animation when slide becomes active.
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                        const target = mutation.target;
+                        if (target.classList.contains('active')) {
+                            // Re-trigger fade-up animations inside this slide
+                            const fadeElements = target.querySelectorAll('.fade-up');
+                            fadeElements.forEach(el => {
+                                el.style.animation = 'none';
+                                el.offsetHeight; // trigger reflow
+                                el.style.animation = '';
+                            });
+                        }
+                    }
+                });
+            });
+
+            slides.forEach(slide => {
+                observer.observe(slide, { attributes: true });
+            });
+
+        })();
+    </script>
+</body>
+</html>
