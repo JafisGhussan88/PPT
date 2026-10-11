@@ -704,7 +704,7 @@
   </section>
 
   <!-- ====== SLIDE 5 : ARSITEKTUR DIAGRAM ====== -->
-  <section class="slide">
+  <!-- <section class="slide">
     <div class="content">
       <h2 class="slide-title anim" style="--i:0">Arsitektur <span>PC Modern</span></h2>
       <div class="arch anim" style="--i:1">
@@ -713,7 +713,62 @@
         </div>
       </div>
     </div>
-  </section>
+  </section> -->
+  <!-- ====== SLIDE 5 : ARSITEKTUR DIAGRAM ====== -->
+<section class="slide">
+  <div class="content">
+    <h2 class="slide-title anim" style="--i:0">Arsitektur <span>PC Modern</span></h2>
+    
+    <!-- Container Gambar dengan Background Menyesuaikan -->
+    <div class="arch anim" style="--i:1">
+      <div class="arch-box" style="
+          position: relative;
+          width: 100%;
+          height: 65vh;
+          border-radius: 16px;
+          overflow: hidden;
+          background-image: url('diagramArsitekturPcModern.png');
+          background-size: contain;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-color: rgba(15, 12, 41, 0.6);
+          box-shadow: 0 20px 40px -15px rgba(167, 139, 250, 0.5);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(6px);
+          transition: transform 0.4s ease, box-shadow 0.4s ease;
+        "
+        onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 25px 50px -10px rgba(255, 210, 0, 0.4)';"
+        onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 20px 40px -15px rgba(167, 139, 250, 0.5)';"
+      >
+        <!-- Overlay Gradien agar Menyatu dengan Tema -->
+        <div style="
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(26, 26, 46, 0.3), rgba(83, 52, 131, 0.2));
+          pointer-events: none;
+        "></div>
+
+        <!-- Label Keterangan Gambar -->
+        <div style="
+          position: absolute;
+          bottom: 12px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(0, 0, 0, 0.5);
+          padding: 6px 18px;
+          border-radius: 20px;
+          font-size: 0.85rem;
+          color: rgba(255, 255, 255, 0.8);
+          backdrop-filter: blur(4px);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          white-space: nowrap;
+        ">
+          Diagram Arsitektur PC Modern
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
   <!-- ====== SLIDE 6 : KOMPONEN 1-9 ====== -->
   <section class="slide">
