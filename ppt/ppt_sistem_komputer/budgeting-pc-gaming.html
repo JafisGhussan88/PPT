@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Budgeting PC Gaming – Kelompok 6</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:wght@500;700&display=swap">
+<style>
+:root{--bg:#07090f;--fg:#eef1f6;--mut:#8b94a7;--gold:#e6c27a;--cy:#5ee6d0;--card:rgba(255,255,255,.05);--line:rgba(255,255,255,.1);--serif:'Playfair Display',Georgia,serif;--sans:'Inter',system-ui,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%;overflow:hidden;background:var(--bg);color:var(--fg);font-family:var(--sans)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+#glow{position:fixed;width:520px;height:520px;border-radius:50%;background:radial-gradient(circle,rgba(94,230,208,.16),transparent 65%);pointer-events:none;transform:translate(-50%,-50%);left:50%;top:40%;z-index:0;transition:left .25s ease-out,top .25s ease-out}
+.orb{position:fixed;border-radius:50%;filter:blur(70px);opacity:.5;z-index:0;animation:float 14s ease-in-out infinite}
+.o1{width:380px;height:380px;background:#3b2a7a;left:-80px;top:-60px}
+.o2{width:320px;height:320px;background:#7a5a1f;right:-60px;bottom:-40px;animation-delay:-6s}
+@keyframes float{50%{transform:translate(40px,30px) scale(1.12)}}
+#bar{position:fixed;top:env(safe-area-inset-top,0px);left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cy));width:0;transition:width .6s cubic-bezier(.2,.8,.2,1);z-index:20}
+.deck{position:relative;height:100%;z-index:1}
+.slide{position:absolute;inset:0;padding:6vh 7vw 11vh;display:flex;flex-direction:column;justify-content:center;opacity:0;visibility:hidden;transform:scale(.98);transition:opacity .7s,transform .7s,visibility .7s;overflow-y:auto}
+.slide.on{opacity:1;visibility:visible;transform:none}
+.r{opacity:0;transform:translateY(28px);filter:blur(6px);transition:opacity .8s,transform .8s cubic-bezier(.2,.8,.2,1),filter .8s;transition-delay:calc(var(--i,0)*.12s + .25s)}
+.on .r{opacity:1;transform:none;filter:none}
+.tag{font-size:.78rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.1rem}
+h1,h2{font-family:var(--serif);font-weight:700;line-height:1.1}
+h1{font-size:clamp(2.2rem,6.4vw,5rem)}
+h2{font-size:clamp(1.8rem,4vw,3.1rem);margin-bottom:1.6rem}
+.gt{background:linear-gradient(100deg,var(--gold),var(--cy));-webkit-background-clip:text;background-clip:text;color:transparent}
+p.lead{color:#c3cad8;font-size:clamp(1rem,1.7vw,1.35rem);line-height:1.7;max-width:62ch;font-weight:300}
+.sub{color:var(--mut);margin-top:1rem;font-size:clamp(.9rem,1.3vw,1.05rem)}
+.team{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:2rem}
+.chip{padding:.65rem 1rem;border:1px solid var(--line);border-radius:14px;background:var(--card);font-size:.85rem;transition:transform .25s,border-color .25s,background .25s;cursor:default}
+.chip:hover{transform:translateY(-5px) rotate(-1deg);border-color:var(--gold);background:rgba(230,194,122,.1)}
+.chip small{display:block;color:var(--mut);font-size:.72rem;margin-top:2px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+.box{border:1px solid var(--line);background:var(--card);border-radius:20px;padding:1.6rem;transition:transform .35s,border-color .35s;backdrop-filter:blur(8px)}
+.box:hover{transform:translateY(-6px);border-color:var(--cy)}
+.box h3{font-family:var(--serif);color:var(--gold);margin-bottom:.8rem;font-size:1.3rem}
+.box li{list-style:none;padding:.55rem 0 .55rem 1.6rem;position:relative;color:#d5dbe7;line-height:1.55;font-size:.98rem}
+.box li::before{content:"✦";position:absolute;left:0;color:var(--cy);transition:transform .4s}
+.box li:hover::before{transform:rotate(180deg) scale(1.3)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:.8rem}
+.c{border:1px solid var(--line);background:var(--card);border-radius:16px;padding:1rem;cursor:pointer;transition:transform .3s,border-color .3s,box-shadow .3s;text-align:left;color:inherit;font:inherit}
+.c:hover,.c:focus-visible{transform:translateY(-8px) scale(1.03);border-color:var(--gold);box-shadow:0 14px 40px -12px rgba(230,194,122,.4);outline:none}
+.c .ic{font-size:1.7rem;display:block;transition:transform .4s}
+.c:hover .ic{transform:scale(1.25) rotate(-8deg)}
+.c b{display:block;margin-top:.5rem;font-size:.88rem}
+.c span.p{color:var(--cy);font-size:.8rem}
+#det{position:fixed;right:0;top:0;bottom:0;width:min(400px,100%);padding:calc(6vh + env(safe-area-inset-top,0px)) 2rem 2rem;background:rgba(10,13,22,.96);backdrop-filter:blur(18px);border-left:1px solid var(--line);transform:translateX(105%);transition:transform .5s cubic-bezier(.2,.8,.2,1);z-index:25;overflow-y:auto}
+#det.on{transform:none}
+#det .big{font-size:3rem}
+#det h3{font-family:var(--serif);font-size:1.5rem;color:var(--gold);margin:.5rem 0}
+#det p{color:#c3cad8;line-height:1.6;font-size:.95rem}
+.pr{font-size:2rem;font-family:var(--serif);margin:1rem 0 .4rem}
+.mini{height:8px;border-radius:9px;background:var(--line);overflow:hidden;margin:.5rem 0}
+.mini i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--gold),var(--cy));transition:width .8s cubic-bezier(.2,.8,.2,1)}
+.btn{display:inline-block;margin-top:1rem;padding:.7rem 1.2rem;border-radius:999px;border:1px solid var(--gold);color:var(--gold);text-decoration:none;background:none;font:inherit;font-size:.85rem;cursor:pointer;transition:background .3s,color .3s}
+.btn:hover,.btn.act{background:var(--gold);color:#111}
+.bars{display:flex;flex-direction:column;gap:.5rem}
+.row{display:grid;grid-template-columns:minmax(80px,150px) 1fr 105px;gap:.8rem;align-items:center;font-size:.85rem;cursor:pointer;padding:.15rem .4rem;border-radius:10px;transition:background .3s,transform .3s}
+.row:hover{background:var(--card);transform:translateX(6px)}
+.row .t{height:14px;border-radius:9px;background:var(--line);overflow:hidden}
+.row .t i{display:block;height:100%;width:0;border-radius:9px;background:linear-gradient(90deg,var(--gold),var(--cy));transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.row em{font-style:normal;text-align:right;color:var(--mut)}
+.row:hover em{color:var(--fg)}
+.ringwrap{display:flex;gap:3rem;align-items:center;flex-wrap:wrap}
+.ring{position:relative;width:min(270px,60vw);aspect-ratio:1}
+.ring svg{transform:rotate(-90deg);width:100%;height:100%}
+.ring circle{fill:none;stroke-width:12;stroke-linecap:round}
+.ring .bg{stroke:var(--line)}
+.ring .fg{stroke:url(#g);stroke-dasharray:565;stroke-dashoffset:565;transition:stroke-dashoffset 1.8s cubic-bezier(.2,.8,.2,1)}
+.ring div{position:absolute;inset:0;display:grid;place-content:center;text-align:center;font-family:var(--serif);font-size:2.4rem}
+.ring small{font-family:var(--sans);font-size:.75rem;color:var(--mut)}
+.stats{display:grid;gap:1rem}
+.stat span{color:var(--mut);font-size:.8rem;text-transform:uppercase;letter-spacing:.15em}
+.stat b{display:block;font-family:var(--serif);font-size:clamp(1.5rem,3.2vw,2.4rem)}
+.tgl{display:flex;gap:.5rem;margin-top:.4rem}
+.spec{display:flex;flex-wrap:wrap;gap:.7rem;margin-top:1.6rem}
+.spec .chip{border-color:rgba(94,230,208,.35);font-size:.95rem}
+.nav{position:fixed;bottom:calc(2.2vh + env(safe-area-inset-bottom,0px));left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:1rem;z-index:20;padding:.5rem 1rem;border:1px solid var(--line);border-radius:999px;background:rgba(10,13,22,.7);backdrop-filter:blur(12px)}
+.nav button{background:none;border:0;color:var(--fg);font-size:1.2rem;cursor:pointer;width:34px;height:34px;border-radius:50%;transition:background .3s,transform .3s}
+.nav button:hover{background:var(--card);transform:scale(1.15)}
+.dots{display:flex;gap:7px}
+.dots i{width:8px;height:8px;border-radius:9px;background:var(--line);cursor:pointer;transition:width .4s,background .4s}
+.dots i.on{width:26px;background:linear-gradient(90deg,var(--gold),var(--cy))}
+.cnt{font-size:.75rem;color:var(--mut);min-width:36px;text-align:center}
+@media(max-width:720px){.two{grid-template-columns:1fr}.row{grid-template-columns:78px 1fr 88px;font-size:.72rem}.slide{padding:5vh 6vw 13vh}.dots{display:none}}
+@media(prefers-reduced-motion:reduce){*{transition-duration:.01s!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div><div id="glow"></div><div id="bar"></div>
+<main class="deck" id="deck">
+
+<section class="slide">
+<div class="tag r" style="--i:0">Pengantar Sistem Komputer · Laporan Praktikum</div>
+<h1 class="r" style="--i:1">Budgeting <span class="gt">PC Gaming</span><br>di Bawah 20 Juta</h1>
+<p class="sub r" style="--i:2">Kelompok 6 · Teknik Komputer · Fakultas Ilmu Komputer · Universitas AMIKOM Yogyakarta 2026</p>
+<div class="team r" style="--i:3">
+<div class="chip">Iqbal Maulana<small>26.83.1253</small></div>
+<div class="chip">Haydar Nur Fairuz Setiawan<small>26.83.1258</small></div>
+<div class="chip">Rajib Khan<small>26.83.1241</small></div>
+<div class="chip">Ghussan Jafis<small>26.83.1263</small></div>
+<div class="chip">Bayu Herlambang<small>26.83.1238</small></div>
+</div>
+</section>
+
+<section class="slide">
+<div class="tag r">A · Pendahuluan</div>
+<h2 class="r" style="--i:1">Latar <span class="gt">Belakang</span></h2>
+<p class="lead r" style="--i:2">Seiring perkembangan dunia digital dan gaming, komponen PC terus maju. Laporan budgeting PC gaming ini dibuat sebagai referensi untuk merancang PC dengan budget di bawah 20 juta rupiah, berdasarkan hasil rincian praktikum kelompok kami.</p>
+<div class="spec r" style="--i:3"><div class="chip">🎮 Gaming</div><div class="chip">💰 &lt; Rp 20 juta</div><div class="chip">🧩 13 komponen</div></div>
+</section>
+
+<section class="slide">
+<div class="tag r">A · Pendahuluan</div>
+<h2 class="r" style="--i:1">Tujuan &amp; <span class="gt">Manfaat</span></h2>
+<div class="two">
+<div class="box r" style="--i:2"><h3>🎯 Tujuan</h3><ul><li>Merencanakan anggaran biaya PC gaming dengan budget di bawah 20 juta.</li><li>Praktikan dapat memahami komponen-komponen PC.</li></ul></div>
+<div class="box r" style="--i:3"><h3>🌱 Manfaat</h3><ul><li>Menambah pengetahuan tentang budgeting PC sesuai budget yang ditentukan.</li><li>Melatih kemampuan memilih komponen PC beserta spesifikasi dan harganya.</li></ul></div>
+</div>
+</section>
+
+<section class="slide">
+<div class="tag r">Komponen · Spesifikasi &amp; Harga</div>
+<h2 class="r" style="--i:1">Jelajahi <span class="gt">13 Komponen</span></h2>
+<div class="grid r" id="grid" style="--i:2"></div>
+<p class="sub r" style="--i:3">Klik kartu untuk melihat spesifikasi lengkap, porsi harga, dan link produk.</p>
+</section>
+
+<section class="slide" data-enter="bars">
+<div class="tag r">Rincian Harga</div>
+<h2 class="r" style="--i:1">Ke mana <span class="gt">uangnya</span> pergi?</h2>
+<div class="tgl r" style="--i:2"><button class="btn act" data-s="p">Urut harga</button><button class="btn" data-s="n">Urut nomor</button></div>
+<div class="bars r" id="bars" style="--i:3;margin-top:1rem"></div>
+</section>
+
+<section class="slide" data-enter="ring">
+<div class="tag r">Ringkasan Perhitungan</div>
+<h2 class="r" style="--i:1">Total <span class="gt">Anggaran</span></h2>
+<div class="ringwrap r" style="--i:2">
+<div class="ring"><svg viewBox="0 0 200 200"><defs><linearGradient id="g"><stop offset="0" stop-color="#e6c27a"/><stop offset="1" stop-color="#5ee6d0"/></linearGradient></defs><circle class="bg" cx="100" cy="100" r="90"/><circle class="fg" id="fg" cx="100" cy="100" r="90"/></svg><div><span id="pct">0%</span><small id="pl">dari target</small></div></div>
+<div class="stats">
+<div class="stat"><span>Total 13 item</span><b id="tot">Rp 0</b></div>
+<div class="stat"><span id="tl">Anggaran target</span><b id="tgt">Rp 0</b></div>
+<div class="stat"><span>Sisa anggaran</span><b class="gt" id="sis">Rp 0</b></div>
+<div class="tgl"><button class="btn act" data-b="18000000">Target Rp 18 jt</button><button class="btn" data-b="20000000">Batas Rp 20 jt</button></div>
+</div>
+</div>
+</section>
+
+<section class="slide">
+<div class="tag r">B · Kesimpulan</div>
+<h2 class="r" style="--i:1">PC Gaming <span class="gt">Full HD</span> yang Seimbang</h2>
+<p class="lead r" style="--i:2">Dengan budget di bawah 20 juta, rakitan ini cocok untuk gaming Full HD dengan performa cukup baik untuk game kompetitif maupun game modern. Akan lebih baik jika RAM ditingkatkan menjadi 32 GB.</p>
+<div class="spec r" style="--i:3"><div class="chip">🖥️ 1080p · 180Hz</div><div class="chip">⚙️ Ryzen 5 7500F</div><div class="chip">🎮 RTX 5050 8GB</div><div class="chip">🧠 16GB DDR5</div><div class="chip">💾 SSD 1TB Gen4</div></div>
+</section>
+
+<section class="slide" style="text-align:center;align-items:center">
+<h1 class="r" style="--i:0">Terima <span class="gt">Kasih</span></h1>
+<p class="sub r" style="--i:1">Kelompok 6 · Teknik Komputer · Universitas AMIKOM Yogyakarta</p>
+<button class="btn r" style="--i:2;margin-top:2rem" id="again">↺ Ulangi dari awal</button>
+</section>
+</main>
+
+<aside id="det" aria-live="polite"></aside>
+<nav class="nav"><button id="pv" aria-label="Sebelumnya">‹</button><div class="dots" id="dots"></div><span class="cnt" id="cnt"></span><button id="nx" aria-label="Berikutnya">›</button></nav>
+
+<script>
+const D=[
+["🧠","Processor","AMD Ryzen 5 7500F (Box/Tray)",2450000,"https://tk.tokopedia.com/ZSgYoeL2/".replace("ZSgYoeL2","ZSgLYoeL2")],
+["🔌","Motherboard","MSI B650M Gaming WiFi",1950000,"https://tk.tokopedia.com/ZSgL2Q5Dp/"],
+["🎮","VGA / GPU","MSI GeForce RTX 5050 8GB Gaming OC",5200000,"https://tk.tokopedia.com/ZSgF8S9vr/"],
+["⚡","RAM","RAM PC DDR5 T-FORCE DELTA 16GB",962000,"https://tk.tokopedia.com/ZSgF2K5XC/"],
+["💾","Storage (SSD)","AGI GEAR AI818 1TB SSD PCIe 4.0 Gen4 M.2 NVMe",1125000,"https://tk.tokopedia.com/ZSgFYCx5D/"],
+["🔋","Power Supply","Cooler Master MWE 750W 80+ Bronze V3",1150000,"https://tk.tokopedia.com/ZSgL6aqb4/"],
+["🗄️","Casing","MSI MAG Forge 130A ATX Gaming Case, include 4 fan",650000,"https://tk.tokopedia.com/ZSgLM1AHc/"],
+["❄️","CPU Cooler","DeepCool AG400 Plus Dual Fan CPU Cooler",475000,"https://tk.tokopedia.com/ZSgFYaVkt/"],
+["🖥️","Monitor","Xiaomi G24i 24\" FHD IPS 180Hz 1ms Gaming Monitor",2250000,"https://tk.tokopedia.com/ZSgLM5AJp/"],
+["⌨️","Keyboard","Rexus Aether 65/75/Fullsize Wireless Mechanical Keyboard, Tri Mode, Hot-Swappable, Gasket Mount",669000,"https://tk.tokopedia.com/ZSgLr6hnj/"],
+["🖱️","Mouse","Fantech Kanata S WG9S Rechargeable Wireless Gaming Mouse",306000,"https://tk.tokopedia.com/ZSgFYxhkm/"],
+["🎧","Headset","Rexus F-30 Headphone Headset Gaming Vonix, 2 Jack + USB",225000,"https://tk.tokopedia.com/ZSgLhYGv9/"],
+["🟫","Mousepad","DeskMat Logitech",305000,"https://tk.tokopedia.com/ZSgLhk9Ms/"]];
+const TOTAL=D.reduce((a,x)=>a+x[3],0);
+const rp=n=>"Rp "+Math.round(n).toLocaleString("id-ID");
+const $=s=>document.querySelector(s);
+const S=[...document.querySelectorAll(".slide")];let cur=0,budget=18000000,sortBy="p";
+
+/* kartu komponen + panel detail */
+$("#grid").innerHTML=D.map((x,i)=>`<button class="c" data-i="${i}"><span class="ic">${x[0]}</span><b>${x[1]}</b><span class="p">${rp(x[3])}</span></button>`).join("");
+const det=$("#det");
+function openDet(i){const x=D[i],p=x[3]/TOTAL*100;
+det.innerHTML=`<button class="btn" id="cl">✕ Tutup</button><div class="big">${x[0]}</div><h3>${i+1}. ${x[1]}</h3><p>${x[2]}</p><div class="pr">${rp(x[3])}</div><div class="mini"><i id="mi"></i></div><p>${p.toFixed(1)}% dari total belanja</p><a class="btn" href="${x[4]}" target="_blank" rel="noopener">Lihat produk ↗</a>`;
+det.classList.add("on");requestAnimationFrame(()=>requestAnimationFrame(()=>$("#mi").style.width=p*2.5+"%"));$("#cl").onclick=closeDet}
+function closeDet(){det.classList.remove("on")}
+$("#grid").onclick=e=>{const c=e.target.closest(".c");if(c)openDet(+c.dataset.i)};
+
+/* bar chart */
+function drawBars(){const max=Math.max(...D.map(x=>x[3]));
+const l=D.map((x,i)=>({x,i}));if(sortBy==="p")l.sort((a,b)=>b.x[3]-a.x[3]);
+$("#bars").innerHTML=l.map(o=>`<div class="row" data-i="${o.i}"><span>${o.x[1]}</span><div class="t"><i data-w="${o.x[3]/max*100}"></i></div><em>${rp(o.x[3])}</em></div>`).join("");
+setTimeout(()=>document.querySelectorAll("#bars i").forEach(b=>b.style.width=b.dataset.w+"%"),80)}
+$("#bars").onclick=e=>{const r=e.target.closest(".row");if(r){openDet(+r.dataset.i)}};
+document.querySelectorAll("[data-s]").forEach(b=>b.onclick=()=>{sortBy=b.dataset.s;document.querySelectorAll("[data-s]").forEach(k=>k.classList.toggle("act",k===b));drawBars()});
+
+/* counter + ring */
+function count(el,to,fmt){const t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/1500),e=1-Math.pow(1-k,3);el.textContent=fmt(to*e);if(k<1)requestAnimationFrame(f)})(t0)}
+function drawBudget(){const pc=TOTAL/budget*100;
+count($("#tot"),TOTAL,rp);count($("#tgt"),budget,rp);count($("#sis"),budget-TOTAL,rp);count($("#pct"),pc,n=>n.toFixed(1)+"%");
+$("#tl").textContent=budget===18e6?"Anggaran target":"Batas atas budget";
+$("#fg").style.strokeDashoffset=565*(1-pc/100)}
+document.querySelectorAll("[data-b]").forEach(b=>b.onclick=()=>{budget=+b.dataset.b;document.querySelectorAll("[data-b]").forEach(k=>k.classList.toggle("act",k===b));drawBudget()});
+
+/* navigasi */
+$("#dots").innerHTML=S.map((_,i)=>`<i data-i="${i}"></i>`).join("");
+function go(n){if(n<0||n>=S.length)return;cur=n;closeDet();
+S.forEach((s,i)=>s.classList.toggle("on",i===n));
+document.querySelectorAll("#dots i").forEach((d,i)=>d.classList.toggle("on",i===n));
+$("#bar").style.width=(n+1)/S.length*100+"%";$("#cnt").textContent=(n+1)+" / "+S.length;
+const h=S[n].dataset.enter;
+if(h==="bars")drawBars();
+if(h==="ring"){$("#fg").style.strokeDashoffset=565;setTimeout(drawBudget,400)}
+history.replaceState(null,"","#"+(n+1))}
+$("#pv").onclick=()=>go(cur-1);$("#nx").onclick=()=>go(cur+1);
+$("#dots").onclick=e=>{if(e.target.dataset.i)go(+e.target.dataset.i)};
+$("#again").onclick=()=>go(0);
+addEventListener("keydown",e=>{if(["ArrowRight","PageDown"," "].includes(e.key)){e.preventDefault();go(cur+1)}
+else if(["ArrowLeft","PageUp"].includes(e.key))go(cur-1);else if(e.key==="Escape")closeDet();else if(e.key==="Home")go(0);else if(e.key==="End")go(S.length-1)});
+let tx=null;addEventListener("touchstart",e=>tx=e.touches[0].clientX,{passive:true});
+addEventListener("touchend",e=>{if(tx===null)return;const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>70)go(cur+(d<0?1:-1));tx=null},{passive:true});
+addEventListener("pointermove",e=>{const g=$("#glow");g.style.left=e.clientX+"px";g.style.top=e.clientY+"px"});
+let w=0;addEventListener("wheel",e=>{if(e.target.closest("#det")||Date.now()-w<900)return;const s=e.target.closest(".slide");if(s&&s.scrollHeight>s.clientHeight+4)return;if(Math.abs(e.deltaY)>30){w=Date.now();go(cur+(e.deltaY>0?1:-1))}},{passive:true});
+go(Math.max(0,Math.min(S.length-1,(parseInt(location.hash.slice(1))||1)-1)));
+</script>
+</body>
+</html>
