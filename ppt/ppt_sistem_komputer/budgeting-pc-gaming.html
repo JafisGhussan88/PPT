@@ -17,7 +17,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .o2{width:320px;height:320px;background:#7a5a1f;right:-60px;bottom:-40px;animation-delay:-6s}
 @keyframes float{50%{transform:translate(40px,30px) scale(1.12)}}
 #bar{position:fixed;top:env(safe-area-inset-top,0px);left:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--cy));width:0;transition:width .6s cubic-bezier(.2,.8,.2,1);z-index:20}
-.deck{position:relative;height:100%;z-index:1}
+.deck{position:relative;height:100%;z-index:1;touch-action:pan-y}
 .slide{position:absolute;inset:0;padding:6vh 7vw 11vh;display:flex;flex-direction:column;justify-content:center;opacity:0;visibility:hidden;transform:scale(.98);transition:opacity .7s,transform .7s,visibility .7s;overflow-y:auto}
 .slide.on{opacity:1;visibility:visible;transform:none}
 .r{opacity:0;transform:translateY(28px);filter:blur(6px);transition:opacity .8s,transform .8s cubic-bezier(.2,.8,.2,1),filter .8s;transition-delay:calc(var(--i,0)*.12s + .25s)}
@@ -169,7 +169,7 @@ p.lead{color:#c3cad8;font-size:clamp(1rem,1.7vw,1.35rem);line-height:1.7;max-wid
 
 <script>
 const D=[
-["🧠","Processor","AMD Ryzen 5 7500F (Box/Tray)",2450000,"https://tk.tokopedia.com/ZSgYoeL2/".replace("ZSgYoeL2","ZSgLYoeL2")],
+["🧠","Processor","AMD Ryzen 5 7500F (Box/Tray)",2450000,"https://tk.tokopedia.com/ZSgLYoeL2/"],
 ["🔌","Motherboard","MSI B650M Gaming WiFi",1950000,"https://tk.tokopedia.com/ZSgL2Q5Dp/"],
 ["🎮","VGA / GPU","MSI GeForce RTX 5050 8GB Gaming OC",5200000,"https://tk.tokopedia.com/ZSgF8S9vr/"],
 ["⚡","RAM","RAM PC DDR5 T-FORCE DELTA 16GB",962000,"https://tk.tokopedia.com/ZSgF2K5XC/"],
@@ -221,17 +221,17 @@ $("#bar").style.width=(n+1)/S.length*100+"%";$("#cnt").textContent=(n+1)+" / "+S
 const h=S[n].dataset.enter;
 if(h==="bars")drawBars();
 if(h==="ring"){$("#fg").style.strokeDashoffset=565;setTimeout(drawBudget,400)}
-history.replaceState(null,"","#"+(n+1))}
+try{history.replaceState(null,"","#"+(n+1))}catch(_){}}
 $("#pv").onclick=()=>go(cur-1);$("#nx").onclick=()=>go(cur+1);
 $("#dots").onclick=e=>{if(e.target.dataset.i)go(+e.target.dataset.i)};
 $("#again").onclick=()=>go(0);
 addEventListener("keydown",e=>{if(["ArrowRight","PageDown"," "].includes(e.key)){e.preventDefault();go(cur+1)}
 else if(["ArrowLeft","PageUp"].includes(e.key))go(cur-1);else if(e.key==="Escape")closeDet();else if(e.key==="Home")go(0);else if(e.key==="End")go(S.length-1)});
-let tx=null;addEventListener("touchstart",e=>tx=e.touches[0].clientX,{passive:true});
-addEventListener("touchend",e=>{if(tx===null)return;const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>70)go(cur+(d<0?1:-1));tx=null},{passive:true});
+let tx=null,ty=null;addEventListener("touchstart",e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
+addEventListener("touchend",e=>{if(tx===null)return;const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;tx=null;if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)*1.2&&!e.target.closest("#det"))go(cur+(dx<0?1:-1))},{passive:true});
 addEventListener("pointermove",e=>{const g=$("#glow");g.style.left=e.clientX+"px";g.style.top=e.clientY+"px"});
 let w=0;addEventListener("wheel",e=>{if(e.target.closest("#det")||Date.now()-w<900)return;const s=e.target.closest(".slide");if(s&&s.scrollHeight>s.clientHeight+4)return;if(Math.abs(e.deltaY)>30){w=Date.now();go(cur+(e.deltaY>0?1:-1))}},{passive:true});
-go(Math.max(0,Math.min(S.length-1,(parseInt(location.hash.slice(1))||1)-1)));
+go(Math.max(0,Math.min(S.length-1,(parseInt((location.hash||"").slice(1))||1)-1)));
 </script>
 </body>
 </html>
